@@ -1,0 +1,42 @@
+@import '../../App.sass'
+
+.carousselProvider
+  position: relative
+
+  .slider
+    overflow: hidden
+
+    .slide
+      margin-right: 30px
+
+      &:last-of-type
+        margin-right: 0
+
+  .backButton, .nextButton
+    position: absolute
+    transform: translateY(-50%)
+    top: 50%
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 40px
+    height: 40px
+    border-radius: 50%
+    border: 0
+    background-color: $primaryD3
+    color: $light
+    cursor: pointer
+
+    &:hover
+      background-color: darken($primaryD3, 10%)
+
+  .backButton
+    left: -50px
+
+  .nextButton
+    right: -50px
+
+  .footer
+    display: flex
+    align-items: center
+    justify-content: center

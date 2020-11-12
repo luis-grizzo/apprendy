@@ -1,0 +1,27 @@
+@import '../../App.sass'
+
+.searchGrid
+  grid-template-columns: minmax(auto, 20%) 1fr
+  grid-gap: 0
+
+.filters
+  align-self: flex-start
+  position: sticky
+  top: 70px
+  background-color: $light
+  height: calc(100vh - 70px)
+  overflow-y: auto
+
+  .filterGroup
+    margin-bottom: 50px
+
+    &:last-of-type
+      margin-bottom: 0
+
+    .title
+      font-size: $headingSize5
+
+.cardsGrid
+  @media only screen and (min-width: 1280px)
+    grid-template-columns: repeat(3, 1fr)
+

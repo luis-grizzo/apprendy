@@ -1,0 +1,109 @@
+@import '../../App.sass'
+
+.gridHalf
+  grid-template-columns: minmax(auto, 20%) 1fr
+  gap: 0
+
+  .filters
+    align-self: flex-start
+    position: sticky
+    top: 70px
+    background-color: $light
+    height: calc(100vh - 70px)
+    overflow-y: auto
+
+    .filterGroup
+      margin-bottom: 50px
+
+      &:last-of-type
+        margin-bottom: 0
+
+      .title
+        font-size: $headingSize5
+
+  .content
+    .gridAuto
+      grid-template-columns: 1fr
+
+    .title
+      font-size: $headingSize3
+      margin-bottom: 50px
+
+    .questionCard
+      align-items: center
+
+      .values
+        display: flex
+        align-items: center
+
+        .awnsers
+          margin-right: 10px
+
+        .awnsers, .votes
+          display: flex
+          flex-direction: column
+          align-items: center
+          justify-content: center
+          font-weight: 700
+          text-transform: uppercase
+          color: $contrast
+
+          .number
+            display: flex
+            align-items: center
+            justify-content: center
+            font-size: $headingSize3
+            font-family: $titleFont
+            width: 100px
+            height: 100px
+            border: 3px solid $contrast
+            border-radius: 50%
+            margin-bottom: 10px
+
+          .description
+            font-size: $textSizeSmall
+
+      .infos
+        .title
+          display: flex
+          align-items: center
+          font-size: $headingSize4
+          margin-bottom: 10px
+
+          .status
+            display: flex
+            align-items: center
+            font-size: $headingSize6
+            color: $primaryD3
+            margin-left: 20px
+
+            &::before
+              display: block
+              content: ''
+              width: 10px
+              height: 10px
+              background-color: $primaryD3
+              border-radius: 50%
+              margin-right: 10px
+
+        .tagsContainer
+          display: flex
+          align-items: center
+          flex-wrap: wrap
+
+        .tag
+          display: inline
+          padding: 8px 16px
+          border-radius: 20px
+          font-size: .8rem
+          font-weight: 700
+          text-transform: uppercase
+          width: fit-content
+          margin-right: 10px
+          margin-bottom: 10px
+          background-color: $contrast
+          color: $light
+          will-change: background-color
+          transition-property: background-color
+          transition-duration: .2s
+          transition-timing-function: ease

@@ -1,0 +1,154 @@
+@import '../../App.sass'
+
+.header
+  display: flex
+  flex-direction: column
+  justify-content: flex-start
+
+  .title
+    font-size: $headingSize2
+
+  .infos
+    display: flex
+    align-items: center
+
+    .info, .status
+      display: flex
+      align-items: center
+      font-size: $textSizeBigger
+      font-weight: 500
+      margin-left: 10px
+
+      &:first-child
+        margin-left: 0
+
+        &::before
+          display: none
+
+      &::before
+        content: ''
+        display: inline-block
+        width: 8px
+        height: 8px
+        background-color: $dark
+        margin-right: 10px
+        border-radius: 50%
+
+    .status
+      font-weight: 700
+
+    .status.done
+      color: $success
+
+      &::before
+        background-color: $success
+
+    .status.open
+      color: $primaryD3
+
+      &::before
+        background-color: $primaryD3
+
+    .status.closed
+      color: $error
+
+      &::before
+        background-color: $error
+
+.content
+  padding: 50px 0
+  margin-bottom: 50px
+  border-bottom: 1px solid $greyL1
+
+  .text
+    text-align: justify
+
+  .code
+    background-color: $light
+    padding: 20px
+    border-radius: 10px
+    margin: 30px 0
+
+    .text
+      text-align: left
+      font-family: monospace
+
+  .img
+    width: 100%
+    height: auto
+    margin: 30px 0
+
+.commentCard
+  display: grid
+  grid-template-columns: auto 1fr
+  margin-bottom: 50px
+
+  &:last-child
+    margin-bottom: 0
+
+  .cardContent
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: flex-start
+
+    .infos
+      display: flex
+      align-items: center
+      margin-bottom: 10px
+
+      .name
+        font-size: $headingSize5
+        margin: 0
+        color: $dark
+
+      .info, .votes
+        display: flex
+        align-items: center
+        font-weight: 500
+        margin-left: 10px
+
+        &::before
+          content: ''
+          width: 8px
+          height: 8px
+          background-color: $dark
+          margin-right: 10px
+          border-radius: 50%
+
+      .votes
+        .number
+          margin: 0 10px
+
+        .upVote, .downVote
+          margin: 0
+          padding: 5px
+          background-color: transparent
+
+        .upVote
+          color: $success
+
+          &:hover
+            background-color: transparentize($success, .7)
+
+        .downVote
+          color: $error
+
+          &:hover
+            background-color: transparentize($error, .7)
+
+.commentForm
+    display: flex
+    align-items: center
+    justify-content: flex-start
+
+    .inputContainer
+      flex: 1
+
+    .input, .button
+      height: 50px
+
+    .input
+      flex: 1
+      padding: 0 30px
+      background-color: $greyL3

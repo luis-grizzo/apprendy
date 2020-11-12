@@ -1,0 +1,55 @@
+@import '../../App.sass'
+
+.footer
+  padding-top: 50px
+  background-color: $primaryD3
+
+  .gridFooter
+    display: grid
+    grid-template-columns: 2fr 1fr 1fr
+    grid-auto-rows: 1fr
+    grid-gap: 40px
+    align-items: flex-start
+    color: $light
+
+    .info
+      align-self: center
+
+      .logo
+        height: 80px
+        width: auto
+
+    .content
+      .title
+        font-size: $headingSize5
+        margin-bottom: 10px
+
+      .linksWrapper
+        display: flex
+        align-items: center
+        flex-wrap: wrap
+
+        .link
+          display: inline
+          padding: 8px 16px
+          border-radius: 20px
+          font-size: .8rem
+          font-weight: 700
+          text-transform: uppercase
+          width: fit-content
+          margin-right: 10px
+          margin-bottom: 10px
+          background-color: $contrast
+          color: $light
+          will-change: background-color
+          transition: $defaultTransition
+
+          &:hover
+            background-color: darken($contrast, 10%)
+
+  .copyright
+    background-color: darken($primaryD3, 10%)
+    margin-top: 50px
+    padding: 10px 0
+    font-size: .8rem
+    color: $light

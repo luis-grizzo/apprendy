@@ -1,0 +1,34 @@
+@import '../../App.sass'
+
+.paginationContainer, .pages, .break, .previous, .next, .previousLink, .nextLink
+  height: 50px
+  display: flex
+  align-items: center
+
+
+.paginationContainer
+  margin-top: 30px
+  justify-content: flex-end
+
+  .page, .break, .previous, .next
+    font-weight: 700
+    font-size: $headingSize6
+    cursor: pointer
+
+    &:hover:not(.active):not(.disabled)
+      color: $contrast
+
+  .page, .break
+    margin: 0 5px
+
+  .previous, .next
+    color: $primaryD3
+
+  .active
+    padding: 3px 5px
+    background-color: $primaryD3
+    color: $greyL3
+    border-radius: 4px
+
+  .disabled
+    color: $grey

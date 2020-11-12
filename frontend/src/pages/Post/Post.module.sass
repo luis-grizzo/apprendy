@@ -1,0 +1,162 @@
+@import '../../App.sass'
+
+.title
+  font-size: 72px
+  color: $light
+  margin-top: calc( -50px - 2rem )
+  z-index: 999
+
+.parallax
+  position: relative
+  display: flex
+  align-items: center
+  justify-content: flex-start
+  height: 75vh
+  z-index: -1
+
+  img
+    filter: brightness(70%) !important
+
+.postCard
+  position: relative
+  grid-template-columns: auto 1fr minmax(auto, 400px)
+  margin-top: calc( -100px - 2rem )
+  z-index: 99
+
+  .authorInfos
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    justify-content: center
+
+    .name
+      font-size: $headingSize2
+      color: $dark
+
+    .postInfos
+      display: flex
+      align-items: center
+      justify-content: flex-start
+
+      .date, .likes
+        display: flex
+        align-items: center
+        text-transform: uppercase
+        font-weight: 500
+
+        .icon
+          margin-right: 5px
+
+  .related
+    display: flex
+    flex-direction: column
+    justify-content: center
+
+    .description
+      font-size: $headingSize5
+
+    .tagsWrapper
+      display: flex
+      align-items: center
+      flex-wrap: wrap
+
+      .tag
+        display: inline
+        padding: 8px 16px
+        border-radius: 20px
+        font-size: .8rem
+        font-weight: 700
+        text-transform: uppercase
+        width: fit-content
+        margin-right: 10px
+        margin-bottom: 10px
+        background-color: $contrast
+        color: $light
+        will-change: background-color
+        transition-property: background-color
+        transition-duration: .2s
+        transition-timing-function: ease
+
+        &:hover
+          background-color: darken($contrast, 10%)
+
+  .button
+    position: absolute
+    top: -30px
+    right: 30px
+    width: 60px
+    height: 60px
+    padding: 0
+    border-radius: 50%
+    background-color: $grey
+    color: $greyL3
+
+    &:hover, &.favorite
+      background-color: $primaryD3
+      color: $light
+
+    .icon
+      font-size: $headingSize6
+
+.content
+  .title, .text, .img
+    margin: 25px 0
+
+    &:first-child
+      margin-top: 0
+
+    &:last-child
+      margin-bottom: 0
+
+  .title
+    font-size: $headingSize4
+    color: $dark
+
+  .text
+    font-size: $textSizeBig
+    line-height: 1.5
+    text-align: justify
+
+  .img
+    width: 100%
+    height: auto
+
+.commentCard
+  display: grid
+  grid-template-columns: auto 1fr
+  margin-bottom: 50px
+
+  &:last-child
+    margin-bottom: 0
+
+  .content
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: flex-start
+
+    .infos
+      display: flex
+      align-items: center
+      margin-bottom: 10px
+      font-weight: 500
+
+      .name
+        font-size: $headingSize5
+        margin: 0
+        color: $dark
+
+.commentForm
+    display: flex
+    align-items: center
+    justify-content: flex-start
+
+    .inputContainer
+      flex: 1
+
+    .input, .button
+      height: 50px
+
+    .input
+      padding: 0 30px
+      background-color: $greyL3

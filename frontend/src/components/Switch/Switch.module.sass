@@ -1,0 +1,42 @@
+@import '../../App.sass'
+
+.wrapper
+  display: flex
+  align-items: center
+  justify-content: flex-start
+  margin: 10px 0
+
+  .switch
+    font-size: 30px
+    appearance: none
+    min-width: 50px
+    width: 50px
+    height: 26px
+    padding: 5px
+    background: $greyL1
+    border-radius: 20px
+    position: relative
+    cursor: pointer
+    outline: none
+    transition: all .2s ease-in-out
+
+    &:checked
+      background-color: $primaryD3
+
+    &::after
+      position: absolute
+      content: ""
+      width: 16px
+      height: 16px
+      border-radius: 50%
+      background: $light
+      box-shadow: 0 0 .25em rgba(0,0,0,.3)
+      left: 5px
+      transition: all .2s ease-in-out
+
+    &:checked::after
+      left: calc( 100% - 21px )
+
+  .label
+    margin-left: 10px
+
