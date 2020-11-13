@@ -22,6 +22,8 @@ const Login: React.FC = () => {
   const [loginForm, setLoginForm] = useState(true);
   const [questionForm, setQuestionForm] = useState(false);
   const [passwordForm, setPasswordForm] = useState(false);
+  const [email, setEmail] = useState('');
+  const [answerSecurity, setAnswerSecurity] = useState('');
 
   const handleLoginSubmit = async (data: Record<string, unknown>) => {
     try {
@@ -87,6 +89,20 @@ const Login: React.FC = () => {
     setPasswordForm(!passwordForm);
   };
 
+  async function handleGetAnswerSecurity() {
+    if (email.length === 0) return;
+
+    const response = await api.get(`/users/secutiry/answer?email=${email}`);
+
+    if (!response.data.pergunta_seguranca) {
+      alert('Verifique o seu e-mail!');
+
+      return;
+    }
+
+    setAnswerSecurity(response.data.pergunta_seguranca);
+  }
+
   return (
     <>
       <main className={`gridHalf ${styles.gridAdjusts}`}>
@@ -144,14 +160,17 @@ const Login: React.FC = () => {
                 label="Email"
                 placeholder="exemplo@exemplo.com"
                 className={styles.input}
+                onChange={e => setEmail(e.target.value)}
                 style={error ? { border: '1px solid red' } : {}}
               />
               <Input
                 name="pergunta"
                 type="text"
                 label="Pergunta de segurança"
-                placeholder="Carregando..."
+                placeholder="Clique aqui para obter a pergunta!"
                 className={styles.input}
+                value={answerSecurity}
+                onClick={handleGetAnswerSecurity}
               />
               <Input
                 name="resposta"

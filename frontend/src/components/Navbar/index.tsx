@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable camelcase */
+import React, { useEffect, useState } from 'react';
 import {
   MdSearch,
   MdAccountBox,
@@ -14,22 +15,44 @@ import { Form } from '@unform/web';
 import Input from '../Input';
 import Button from '../Button';
 
+import { logout } from '../../auth/token';
+import api from '../../services/api';
+
 import styles from './Navbar.module.sass';
 
 import logo from '../../assets/logo.svg';
-import userImage from '../../assets/user.jpg';
+import userDefaultImage from '../../assets/user.png';
 import background from '../../assets/testImage.jpg';
-import { logout } from '../../auth/token';
 
 interface NavbarProps {
   logged?: boolean;
   admin?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ logged, admin }) => {
-  const [sidenav, setSidenav] = useState(false);
+interface UserProperties {
+  id_usuario: number;
+  nome: string;
+  foto_perfil: string;
+  texto_perfil: string;
+  capa_perfil: string;
+  id_tipo: number;
+}
 
+const Navbar: React.FC<NavbarProps> = ({ logged }) => {
   const history = useHistory();
+
+  const [sidenav, setSidenav] = useState(false);
+  const [user, setUser] = useState<UserProperties>();
+
+  useEffect(() => {
+    api.get('/user/info').then(response => {
+      setUser(response.data);
+    });
+  }, []);
+
+  if (!user) {
+    return <p>Carregando.....</p>;
+  }
 
   const handleSidenav = () => {
     setSidenav(!sidenav);
@@ -40,7 +63,6 @@ const Navbar: React.FC<NavbarProps> = ({ logged, admin }) => {
   }
 
   const handleSubmit = (data: Record<string, unknown>) => {
-    console.log(data);
     history.push(`/search/${data.search}`);
   };
 
@@ -70,7 +92,7 @@ const Navbar: React.FC<NavbarProps> = ({ logged, admin }) => {
               />
             </Form>
             <div className={styles.buttonsWrapper}>
-              {admin && (
+              {user.id_tipo === 3 && (
                 <Link to="/admin/resources" className={styles.link}>
                   <Button type="button" variant="contrast" icon={MdDashboard}>
                     Painel adm
@@ -99,7 +121,7 @@ const Navbar: React.FC<NavbarProps> = ({ logged, admin }) => {
                 <div className={styles.userButton}>
                   <img
                     className={styles.img}
-                    src={userImage}
+                    src={user.foto_perfil ? user.foto_perfil : userDefaultImage}
                     alt="User avatar"
                   />
                 </div>
@@ -128,25 +150,27 @@ const Navbar: React.FC<NavbarProps> = ({ logged, admin }) => {
               <li className={styles.userInfos}>
                 <div className={styles.userBackground}>
                   <img
-                    src={background}
-                    alt="Capa de { name }"
+                    src={user.capa_perfil ? user.capa_perfil : background}
+                    alt="background"
                     className={styles.img}
                   />
                 </div>
                 <div className={styles.content}>
                   <div className={styles.userImage}>
                     <img
-                      src={userImage}
+                      src={
+                        user.foto_perfil ? user.foto_perfil : userDefaultImage
+                      }
                       alt="{ name }"
                       className={styles.img}
                     />
                   </div>
-                  <span className={styles.name}>Joana Da Silva</span>
+                  <span className={styles.name}>{user.nome}</span>
                 </div>
               </li>
               <li className={styles.divider} />
               <li>
-                <Link to="/user/123" className={styles.link}>
+                <Link to={`/user/${user.id_usuario}`} className={styles.link}>
                   <MdAccountBox className={styles.icon} />
                   Meu perfil
                 </Link>
@@ -166,7 +190,7 @@ const Navbar: React.FC<NavbarProps> = ({ logged, admin }) => {
                 </Link>
               </li>
               <li className={styles.divider} />
-              {admin && (
+              {user.id_tipo === 3 && (
                 <>
                   <li>
                     <Link to="/admin/resources" className={styles.link}>

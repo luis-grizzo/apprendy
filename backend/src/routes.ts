@@ -1,9 +1,10 @@
-import { NextFunction, Router } from 'express'
+import { Router } from 'express'
 
 import SessionController from './controllers/UserController/SessionController'
 import UsersController from './controllers/UserController/UsersController'
 import TipoUsersController from './controllers/UserController/TipoUsersController'
 import NotificationController from './controllers/UserController/NotificationController'
+import GetAnswerSecurity from './controllers/UserController/GetAnswerSecurity'
 
 import CategoriaController from './controllers/PublicationController/CategoriaController'
 import TagsController from './controllers/PublicationController/TagsController'
@@ -24,6 +25,7 @@ routes.post('/signin', SessionController.signin)
 routes.post('/forgot', SessionController.forgotPassword)
 routes.patch('/changePassword', Authorizations.show, SessionController.changePassword)
 routes.put('/users/security', Authorizations.show, SessionController.changeSecurity)
+routes.get('/users/secutiry/answer', GetAnswerSecurity.show)
 
 routes.post('/authenticated', Authorizations.show, Authorizations.authenticated)
 
@@ -31,8 +33,8 @@ routes.get('/notifications', Authorizations.show, NotificationController.index)
 routes.delete('/notifications', Authorizations.show, NotificationController.delete)
 
 routes.get('/users', UsersController.index)
-routes.get('/users/:id', UsersController.show)
 routes.put('/users', Authorizations.show, UsersController.update)
+routes.get('/user/info', Authorizations.show, UsersController.show)
 
 routes.put('/admin/users/tipo_user', Authorizations.show, TipoUsersController.update)
 

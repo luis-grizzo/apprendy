@@ -13,7 +13,7 @@ import Footer from '../../components/Footer';
 
 import styles from './User.module.sass';
 
-import userImage from '../../assets/user.jpg';
+import userImage from '../../assets/user.png';
 import testImage from '../../assets/testImage.jpg';
 
 const User: React.FC = () => {

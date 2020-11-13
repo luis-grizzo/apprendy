@@ -13,7 +13,7 @@ import Footer from '../../components/Footer';
 import styles from './Post.module.sass';
 
 import backgroundImage from '../../assets/testImage.jpg';
-import authorImage from '../../assets/user.jpg';
+import authorImage from '../../assets/user.png';
 import commentImage from '../../assets/testImage1.jpg';
 
 const Post: React.FC = () => {
