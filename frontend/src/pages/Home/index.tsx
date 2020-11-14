@@ -26,7 +26,7 @@ interface PostProperties {
     imagem: string;
     ativo: boolean;
     data_publicacao: string;
-    conteudo: string;
+    descricao: string;
   };
   tag: Array<{
     id_tag: number;
@@ -120,7 +120,7 @@ const Home: React.FC = () => {
               image={post.publicacao.imagem}
               title={post.publicacao.titulo}
               date={post.publicacao.data_publicacao}
-              description={post.publicacao.conteudo}
+              description={post.publicacao.descricao}
               tags={post.tag}
             />
           ))}

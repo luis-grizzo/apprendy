@@ -171,6 +171,7 @@ const Login: React.FC = () => {
                 className={styles.input}
                 value={answerSecurity}
                 onClick={handleGetAnswerSecurity}
+                readOnly
               />
               <Input
                 name="resposta"

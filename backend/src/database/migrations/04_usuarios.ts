@@ -11,6 +11,7 @@ export async function up (knex: Knex) {
     table.string('resposta', 20) 
     table.string('texto_perfil', 200) 
     table.string('capa_perfil')
+    table.string('data_entrada').notNullable()
     
     table.integer('id_tipo')
       .unsigned().notNullable()

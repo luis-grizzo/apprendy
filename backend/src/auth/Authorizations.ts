@@ -39,7 +39,6 @@ class Authorization {
 
   public authenticated = (req: Request, res: Response) => {
     // Essa função vai servir para authenticar no front-end
-    console.log('ok')
     res.send('')
   }
 }

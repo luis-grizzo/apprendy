@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+/* eslint-disable camelcase */
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Parallax } from 'react-parallax';
 import { Form } from '@unform/web';
 import { MdEdit, MdDateRange, MdFavorite, MdBook } from 'react-icons/md';
@@ -15,10 +17,59 @@ import styles from './User.module.sass';
 
 import userImage from '../../assets/user.png';
 import testImage from '../../assets/testImage.jpg';
+import api from '../../services/api';
+import user from '../Content/User';
+
+interface Params {
+  id: string;
+}
+
+interface ContentData {
+  publicacao: {
+    id_conteudo: number;
+    titulo: string;
+    imagem: string;
+    ativo: boolean;
+    data_publicacao: string;
+    descricao: string;
+  };
+  tag: Array<{
+    id_tag: number;
+    descritivo: string;
+  }>;
+}
+
+interface UserData {
+  user: {
+    id_usuario: number;
+    nome: string;
+    foto_perfil: string;
+    texto_perfil: string;
+    capa_perfil: string;
+    id_tipo: number;
+    data_entrada: string;
+  };
+  likes: Array<ContentData>;
+  contents: Array<ContentData>;
+}
 
 const User: React.FC = () => {
+  const params = useParams() as Params;
   const [modalOpen, setModalOpen] = useState(false);
-  console.log('User page', modalOpen);
+
+  const [infoLoading, setInfoLoading] = useState('Carregando...');
+  const [userData, setUserData] = useState<UserData>();
+
+  useEffect(() => {
+    api
+      .get(`/users/${params.id}/info`)
+      .then(response => {
+        setUserData(response.data);
+      })
+      .catch(() => {
+        setInfoLoading('404 - User Not Found');
+      });
+  }, [params.id]);
 
   const handleModal = () => {
     setModalOpen(!modalOpen);
@@ -28,6 +79,21 @@ const User: React.FC = () => {
   const handleUserUpdate = (data: Record<string, unknown>) => {
     console.log(data);
   };
+
+  if (!userData) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+        }}
+      >
+        <h2>{infoLoading}</h2>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -39,7 +105,9 @@ const User: React.FC = () => {
       <Navbar logged />
       <Parallax
         className={styles.parallax}
-        bgImage={testImage}
+        bgImage={
+          userData.user.capa_perfil ? userData.user.capa_perfil : testImage
+        }
         strength={500}
         contentClassName={styles.parallaxContent}
       />
@@ -48,7 +116,15 @@ const User: React.FC = () => {
           <CardPanel className={`${styles.userInfo}`}>
             <div className={styles.top}>
               <div className={styles.imageWrapper}>
-                <img src={userImage} alt="Name" className={styles.img} />
+                <img
+                  src={
+                    userData.user.foto_perfil
+                      ? userData.user.foto_perfil
+                      : userImage
+                  }
+                  alt="Name"
+                  className={styles.img}
+                />
               </div>
               <Button
                 type="button"
@@ -61,88 +137,57 @@ const User: React.FC = () => {
               </Button>
             </div>
             <div className={styles.description}>
-              <h1 className={styles.name}>Joana Da Silva</h1>
+              <h1 className={styles.name}>{userData.user.nome}</h1>
               <div className={styles.details}>
                 <MdDateRange className={styles.icon} />
-                Entrou em Jan 2020
+                {`Entrou em ${userData.user.data_entrada}`}
                 <span className={styles.dot} />
                 <MdBook className={styles.icon} />
-                216 Recursos
+                {`${userData.contents.length} Recursos`}
                 <span className={styles.dot} />
                 <MdFavorite className={styles.icon} />
-                30 Favoritos
+                {`${userData.likes.length} Favoritos`}
               </div>
-              <p className={styles.bio}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit
-                laborum incidunt laboriosam. Quis eligendi quia ut, voluptatum
-                dolorem soluta suscipit. Quod perspiciatis aperiam optio
-                distinctio maxime, ad corporis error enim.
-              </p>
+              <p className={styles.bio}>{userData.user.texto_perfil}</p>
             </div>
           </CardPanel>
         </section>
         <section className="section container">
-          <h2 className={styles.title}>Favoritos de Joana Da Silva</h2>
+          <h2 className={styles.title}>
+            Favoritos de
+            {` ${userData.user.nome}`}
+          </h2>
           <div className="gridAuto">
-            {/* <Card
-              postId={123}
-              image={testImage}
-              title="Entendendo Baskara"
-              date="01 Jan, 2020"
-              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent non vulputate nisl, et volutpat metus..."
-              tags={['Matemática', 'Lógica', 'Calculo']}
-              imageBg
-            />
-            <Card
-              postId={123}
-              image={testImage}
-              title="Titulo"
-              date="01 Jan, 2020"
-              description="Descrição"
-              tags={['um', 'dois', 'tres']}
-              imageBg
-            />
-            <Card
-              postId={123}
-              image={testImage}
-              title="Titulo"
-              date="01 Jan, 2020"
-              description="Descrição"
-              tags={['um', 'dois', 'tres']}
-              imageBg
-            /> */}
+            {userData.likes.map(post => (
+              <Card
+                key={post.publicacao.id_conteudo}
+                postId={post.publicacao.id_conteudo}
+                image={post.publicacao.imagem}
+                title={post.publicacao.titulo}
+                date={post.publicacao.data_publicacao}
+                description={post.publicacao.descricao}
+                tags={post.tag}
+              />
+            ))}
           </div>
         </section>
         <section className="section container">
-          <h2 className={styles.title}>Recursos de Joana Da Silva</h2>
+          <h2 className={styles.title}>
+            Recursos de
+            {` ${userData.user.nome}`}
+          </h2>
           <div className="gridAuto">
-            {/* <Card
-              postId={123}
-              image={testImage}
-              title="Entendendo Baskara"
-              date="01 Jan, 2020"
-              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent non vulputate nisl, et volutpat metus..."
-              tags={['Matemática', 'Lógica', 'Calculo']}
-              imageBg
-            />
-            <Card
-              postId={123}
-              image={testImage}
-              title="Titulo"
-              date="01 Jan, 2020"
-              description="Descrição"
-              tags={['um', 'dois', 'tres']}
-              imageBg
-            />
-            <Card
-              postId={123}
-              image={testImage}
-              title="Titulo"
-              date="01 Jan, 2020"
-              description="Descrição"
-              tags={['um', 'dois', 'tres']}
-              imageBg
-            /> */}
+            {userData.contents.map(post => (
+              <Card
+                key={post.publicacao.id_conteudo}
+                postId={post.publicacao.id_conteudo}
+                image={post.publicacao.imagem}
+                title={post.publicacao.titulo}
+                date={post.publicacao.data_publicacao}
+                description={post.publicacao.descricao}
+                tags={post.tag}
+              />
+            ))}
           </div>
           <Pagination pageCount={30} />
         </section>

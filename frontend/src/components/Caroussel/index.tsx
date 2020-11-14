@@ -28,7 +28,7 @@ interface ContentProps {
     imagem: string;
     ativo: boolean;
     data_publicacao: string;
-    conteudo: string;
+    descricao: string;
   };
   tag: Array<{
     id_tag: number;
@@ -65,13 +65,12 @@ const Caroussel: React.FC<CarousselProps> = ({
               image={content.publicacao.imagem}
               title={content.publicacao.titulo}
               date={content.publicacao.data_publicacao}
-              description={content.publicacao.conteudo}
+              description={content.publicacao.descricao}
               tags={content.tag}
               imageBg
             />
           </Slide>
         ))}
-        ;
         {/* <Slide index={0} className={styles.slide}>
           I am the first Slide.
         </Slide>

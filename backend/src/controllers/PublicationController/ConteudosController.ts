@@ -14,6 +14,20 @@ class ConteudosController {
   private _tagsConteudosModel = new TagsConteudosModel()
   private _tagsModel = new TagsModel()
 
+  public show = async (req: Request, res: Response) => {
+    const { id_conteudo } = req.params
+
+    if(isNaN(Number(id_conteudo))) {
+      return res.status(400).json({ error: 'Bad Request' })
+    }
+
+    const conteudo = await this._conteudoModel.showPublication(Number(id_conteudo))
+
+    if(!conteudo) return res.status(404).json({ error: 'Publication Not Found!'})
+
+    return res.json(conteudo)
+  }
+
   public index = async (req: Request, res: Response) => {
     const { pages, order } = req.query
 
@@ -31,16 +45,16 @@ class ConteudosController {
 
   public store = async (req: Request, res: Response) => {
     let { userId } = req.userSession
-    const { titulo, imagem, conteudo, ativo, id_ferramenta, tags } = req.body
+    const { titulo, descricao, imagem, conteudo, ativo, id_ferramenta, tags } = req.body
 
-    if(!titulo || !imagem || !conteudo || !id_ferramenta) 
+    if(!titulo || !descricao || !imagem || !conteudo || !id_ferramenta) 
       return res.status(401).json({ error: 'Please, inform all data' })
 
     const user = await this._userModel.GetAccount(userId)
 
     const data = user.id_tipo === 1 ?
-      this.factoryContent(titulo, imagem, conteudo, false, userId, Number(id_ferramenta)) :
-      this.factoryContent(titulo, imagem, conteudo, ativo, userId, Number(id_ferramenta)) 
+      this.factoryContent(titulo, imagem, descricao, conteudo, false, userId, Number(id_ferramenta)) :
+      this.factoryContent(titulo, imagem, descricao, conteudo, ativo, userId, Number(id_ferramenta)) 
 
     try {
       for(let id_tag of tags) {
@@ -123,11 +137,11 @@ class ConteudosController {
     return tag
   }
 
-  private factoryContent(titulo: string, imagem: string, conteudo: string, ativo: boolean, id_usuario: number, id_ferramenta: number) {
+  private factoryContent(titulo: string, imagem: string, descricao: string, conteudo: string, ativo: boolean, id_usuario: number, id_ferramenta: number) {
     const data_publicacao = nowDateUTC()
     const isAtivo = ativo ? 1 : 0
     
-    return { titulo, imagem, conteudo, ativo: isAtivo, id_usuario, id_ferramenta, data_publicacao }
+    return { titulo, imagem, descricao, conteudo, ativo: isAtivo, id_usuario, id_ferramenta, data_publicacao }
   }
 }
 

@@ -6,6 +6,9 @@ import GenerateToken from '../../utils/GenerateToken'
 import UserModel from '../../models/UsersModel/UserModel'
 import SessionsModel from '../../models/UsersModel/SessionsModel'
 
+import FormatDate from '../../utils/FormatDate'
+import nowDateUTC from '../../utils/nowDateUTC'
+
 class SessionsController {
   private _sessionModel = new SessionsModel()
   private _userModel = new UserModel()
@@ -101,11 +104,14 @@ class SessionsController {
   private FactoryCreateAccountData = async (email: string, nome: string, password: string) => {
     const isFirstUserCreate = await this._userModel.ReadWithLimit(2)
 
+    const date = nowDateUTC()
+    const data_entrada = FormatDate(date)
+
     const id_tipo = isFirstUserCreate.length > 0 ? 1 : 3
     
     const senha = await bycript.hash(password, 10)
 
-    return { email, nome, senha, id_tipo }
+    return { email, nome, senha, id_tipo, data_entrada }
   }
 }
 

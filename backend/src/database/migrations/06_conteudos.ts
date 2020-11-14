@@ -5,6 +5,7 @@ export async function up (knex: Knex) {
     table.increments('id_conteudo').primary()
     table.string('titulo').notNullable()
     table.string('imagem').notNullable()
+    table.string('descricao').notNullable()
     table.text('conteudo', 'longtext').notNullable()
     table.boolean('ativo').notNullable()
     table.string('data_publicacao').notNullable()

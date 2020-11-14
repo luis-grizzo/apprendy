@@ -25,8 +25,8 @@ class SimpleCRUD {
     return await knex(this.table).where(where).select('*')
   }
 
-  public ReadWithWhereCount = async (table: string, where: object) => {
-    const count = await knex(table).where(where).count().first()
+  public ReadWithWhereCount = async (where: object) => {
+    const count = await knex(this.table).where(where).count().first()
 
     return count['count(*)']
   }

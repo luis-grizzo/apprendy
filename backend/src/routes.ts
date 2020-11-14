@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import SessionController from './controllers/UserController/SessionController'
 import UsersController from './controllers/UserController/UsersController'
+import UsersDashboard from './controllers/UserController/UsersDashboard'
 import TipoUsersController from './controllers/UserController/TipoUsersController'
 import NotificationController from './controllers/UserController/NotificationController'
 import GetAnswerSecurity from './controllers/UserController/GetAnswerSecurity'
@@ -33,8 +34,9 @@ routes.get('/notifications', Authorizations.show, NotificationController.index)
 routes.delete('/notifications', Authorizations.show, NotificationController.delete)
 
 routes.get('/users', UsersController.index)
+routes.get('/users/home/info', Authorizations.show, UsersController.show)
+routes.get('/users/:id/info', UsersDashboard.show)
 routes.put('/users', Authorizations.show, UsersController.update)
-routes.get('/user/info', Authorizations.show, UsersController.show)
 
 routes.put('/admin/users/tipo_user', Authorizations.show, TipoUsersController.update)
 
@@ -51,6 +53,7 @@ routes.post('/ferramentas', Authorizations.show, FerramentasController.store)
 routes.put('/ferramentas/:id_ferramenta', Authorizations.show, FerramentasController.update)
 
 routes.get('/conteudos', ConteudosController.index)
+routes.get('/conteudos/:id_conteudo', ConteudosController.show)
 routes.post('/conteudos', Authorizations.show, ConteudosController.store)
 routes.put('/conteudos/:id_conteudo', Authorizations.show, ConteudosController.update)
 routes.delete('/conteudos/:id_conteudo', Authorizations.show, ConteudosController.delete)

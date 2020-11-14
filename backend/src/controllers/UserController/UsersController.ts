@@ -14,11 +14,9 @@ class UsersController  {
   public show = async (req: Request, res: Response) => {
     const { userId } = req.userSession
 
-    const user = await this._userModel.ReadWithWhereFirst({ id_usuario: userId })
+    const user = await this._userModel.GetAccount(userId)
 
     if(!user) return res.status(404).json({ error: "User not Found" })
-
-    user.senha = undefined
 
     return res.json(user)
   }

@@ -45,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
   const [user, setUser] = useState<UserProperties>();
 
   useEffect(() => {
-    api.get('/user/info').then(response => {
+    api.get('/users/home/info').then(response => {
       setUser(response.data);
     });
   }, []);
