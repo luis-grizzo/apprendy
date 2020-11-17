@@ -12,9 +12,6 @@ import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
 
 import styles from './Home.module.sass';
-
-import testImage from '../../assets/testImage.jpg';
-import heroHome from '../../assets/heroHome.jpg';
 import homeHeader from '../../assets/testImage2.jpg';
 
 import api from '../../services/api';

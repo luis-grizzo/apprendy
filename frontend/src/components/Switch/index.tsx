@@ -1,14 +1,19 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, InputHTMLAttributes } from 'react';
 
 import styles from './Switch.module.sass';
 
-interface ISwtichProps {
+interface ISwtichProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   isChecked?: boolean;
   className?: string;
 }
 
-const Switch: React.FC<ISwtichProps> = ({ label, isChecked, className }) => {
+const Switch: React.FC<ISwtichProps> = ({
+  label,
+  isChecked,
+  className,
+  ...rest
+}) => {
   const [checked, setChecked] = useState(!!isChecked);
 
   const handleCheck = useCallback(() => {
@@ -21,8 +26,9 @@ const Switch: React.FC<ISwtichProps> = ({ label, isChecked, className }) => {
         name="switch"
         className={`${styles.switch} ${className}`}
         type="checkbox"
-        checked={checked}
+        defaultChecked={checked}
         onClick={handleCheck}
+        {...rest}
       />
       <label htmlFor="switch" className={styles.label}>
         {label}

@@ -7,6 +7,7 @@ import TagsModel from '../../models/PublicationModel/TagsModel'
 
 import FormatDate from '../../utils/FormatDate'
 import nowDateUTC from '../../utils/nowDateUTC'
+import { ta } from 'date-fns/locale'
 
 class ConteudosController {
   private _userModel = new UserModel()
@@ -29,10 +30,13 @@ class ConteudosController {
   }
 
   public index = async (req: Request, res: Response) => {
-    const { pages, order } = req.query
+    const { pages, order, tags, onlyActive } = req.query
+    
+    const tagString = String(tags)
+    const tagsArray = tagString.split(",")
 
     // return publication and tags
-    let conteudos = await this._conteudoModel.indexConteudo(Number(pages), String(order))
+    let conteudos = await this._conteudoModel.indexConteudo(Number(pages), String(order), tagsArray, this.onlyActive(String(onlyActive)))
 
     conteudos = conteudos.map(conteudo => {
       conteudo.publicacao.data_publicacao = FormatDate(conteudo.publicacao.data_publicacao)
@@ -123,6 +127,10 @@ class ConteudosController {
     } catch (e) {
       return res.status(400).json({ error: e.message })
     }
+  }
+
+  private onlyActive = (active: string) => {
+    return active ? active : true
   }
 
   private addTags = async (id_conteudo: number, tags: Array<number>) => {

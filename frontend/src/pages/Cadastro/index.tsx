@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { useAlert as RcAlert } from 'react-alert';
 import { Form } from '@unform/web';
 import { MdSend, MdUndo } from 'react-icons/md';
 
@@ -16,10 +17,21 @@ import { setToken } from '../../auth/token';
 
 const Cadastro: React.FC = () => {
   const history = useHistory();
+  const alertMsg = RcAlert();
 
   const handleSubmit = async (data: Record<string, string>) => {
+    if (data.fullName.length <= 0) {
+      return alertMsg.info('Digite seu nome!');
+    }
+
+    const isEmail = data.email.match(/\S+@\w+\.\w{2,6}(\.\w{2})?/g);
+
+    if (!isEmail) {
+      return alertMsg.info('Digite um email valido!');
+    }
+
     if (data.password.length < 8) {
-      return alert('Digite uma senha com no minimo 8 digitos');
+      return alertMsg.info('Digite uma senha com no minimo 8 digitos');
     }
 
     const datas = {
@@ -41,9 +53,15 @@ const Cadastro: React.FC = () => {
 
       await api.put('/users/security', security);
 
-      history.push('/');
+      return history.push('/');
     } catch (e) {
-      alert('Aconteceu algum erro, tente novamente!');
+      const response = e.response.data;
+
+      if (response.error) {
+        return alertMsg.error(response.error);
+      }
+
+      alertMsg.error('Aconteceu um erro, tente novamente!');
     }
   };
 

@@ -33,7 +33,8 @@ const Routes: React.FC = () => (
       <PrivateRoute path="/" exact component={Home} />
       <PrivateRoute path="/post/:id" component={Post} />
       <PrivateRoute path="/user/:id" component={User} />
-      <PrivateRoute path="/search/:id" component={Search} />
+      <PrivateRoute path="/search" component={Search} />
+      {/* <PrivateRoute path="/search/content/:id" component={Search} /> */}
       <PrivateRoute path="/content/resource" component={ContentResource} />
       <PrivateRoute path="/content/tag" component={ContentTag} />
       <PrivateRoute path="/content/tool" component={ContentTool} />
@@ -48,6 +49,7 @@ const Routes: React.FC = () => (
       <PrivateRoute path="/admin/questions" component={AdminQuestions} />
       <PrivateRoute path="/comunity" component={Comunity} />
       <PrivateRoute path="/question/:id" component={Question} />
+      <Route path="*" component={Home} />
     </Switch>
   </BrowserRouter>
 );

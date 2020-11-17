@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { useAlert as RcAlert } from 'react-alert';
 import { Form } from '@unform/web';
 import { MdAccountCircle, MdSend, MdLockOpen, MdUndo } from 'react-icons/md';
 
@@ -16,6 +17,7 @@ import { setToken } from '../../auth/token';
 
 const Login: React.FC = () => {
   const history = useHistory();
+  const alertMsg = RcAlert();
 
   const [error, setError] = useState(false);
   const [tokenForgot, setTokenForgot] = useState('');
@@ -25,7 +27,17 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [answerSecurity, setAnswerSecurity] = useState('');
 
-  const handleLoginSubmit = async (data: Record<string, unknown>) => {
+  const handleLoginSubmit = async (data: Record<string, string>) => {
+    const isEmail = data.email.match(/\S+@\w+\.\w{2,6}(\.\w{2})?/g);
+
+    if (!isEmail) {
+      return alertMsg.info('Digite um email valido!');
+    }
+
+    if (data.senha.length <= 0) {
+      return alertMsg.info('Digite uma senha');
+    }
+
     try {
       const response = await api.post('/signin', data);
 
@@ -34,10 +46,24 @@ const Login: React.FC = () => {
       history.push('/home');
     } catch (e) {
       setError(true);
+
+      const response = e.response.data;
+
+      if (response.error) {
+        return alertMsg.error(response.error);
+      }
+
+      alertMsg.error('Aconteceu um erro, tente novamente!');
     }
   };
 
-  const handleQuestionSubmit = async (data: Record<string, unknown>) => {
+  const handleQuestionSubmit = async (data: Record<string, string>) => {
+    const isEmail = data.email.match(/\S+@\w+\.\w{2,6}(\.\w{2})?/g);
+
+    if (!isEmail) {
+      return alertMsg.info('Digite um email valido!');
+    }
+
     const datas = {
       email: data.email,
       pergunta_seguranca: data.pergunta,
@@ -51,17 +77,19 @@ const Login: React.FC = () => {
 
       handleNewPasswordForm();
     } catch (e) {
-      alert('Verifique sua Resposta!');
+      alertMsg.error('Verifique sua Resposta!');
     }
   };
 
   const handleNewPasswordSubmit = async (data: Record<string, string>) => {
     if (data.novaSenha !== data.novaSenhaRepetir) {
-      return alert('Senhas não correspondente, verifiquei suas senhas!');
+      return alertMsg.info(
+        'Senhas não correspondente, verifiquei suas senhas!',
+      );
     }
 
     if (data.novaSenha.length < 8) {
-      return alert('A senha precisa ter no minimo 8 caracteres');
+      return alertMsg.info('A senha precisa ter no minimo 8 caracteres');
     }
 
     const datas = {
@@ -75,7 +103,7 @@ const Login: React.FC = () => {
 
       history.push('/home');
     } catch (e) {
-      alert('Aconteceu algum erro, tente novamente!');
+      alertMsg.error('Aconteceu algum erro, tente novamente!');
     }
   };
 
@@ -95,7 +123,7 @@ const Login: React.FC = () => {
     const response = await api.get(`/users/secutiry/answer?email=${email}`);
 
     if (!response.data.pergunta_seguranca) {
-      alert('Verifique o seu e-mail!');
+      alertMsg.error('Nenhum pergunta foi encontrada, Verifique o seu e-mail!');
 
       return;
     }
@@ -161,7 +189,6 @@ const Login: React.FC = () => {
                 placeholder="exemplo@exemplo.com"
                 className={styles.input}
                 onChange={e => setEmail(e.target.value)}
-                style={error ? { border: '1px solid red' } : {}}
               />
               <Input
                 name="pergunta"

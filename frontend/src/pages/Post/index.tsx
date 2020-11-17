@@ -18,6 +18,7 @@ import backgroundImage from '../../assets/testImage.jpg';
 import authorImage from '../../assets/user.png';
 import commentImage from '../../assets/testImage1.jpg';
 import api from '../../services/api';
+import tags from '../Admin/Tags';
 
 interface Params {
   id: string;
@@ -120,7 +121,11 @@ const Post: React.FC = () => {
               <h3 className={styles.description}>Tags relacionadas</h3>
               <div className={styles.tagsWrapper}>
                 {post.tag.map(tag => (
-                  <Link className={styles.tag} to={`/search/${tag.id_tag}`}>
+                  <Link
+                    key={tag.id_tag}
+                    className={styles.tag}
+                    to={`/search/${tag.id_tag}`}
+                  >
                     {tag.descritivo}
                   </Link>
                 ))}

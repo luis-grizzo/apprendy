@@ -88,16 +88,18 @@ class ConteudoModel extends SimpleCRUD {
     return conteudo;
   };
 
-  public indexConteudo = async (pages: number, order: string) => {
+  public indexConteudo = async (pages: number, order: string, tags: Array<string>, onlyActive?: boolean) => {
     if (!pages) {
       pages = 1;
     }
+
     if (!order) {
       order = "asc";
     }
 
     const conteudos = await knex("conteudos")
       .innerJoin("usuarios", "usuarios.id_usuario", "conteudos.id_usuario")
+      .leftJoin("tags_conteudos", "tags_conteudos.id_conteudo", "conteudos.id_conteudo")
       .innerJoin(
         "ferramentas",
         "ferramentas.id_ferramenta",
@@ -108,7 +110,8 @@ class ConteudoModel extends SimpleCRUD {
         "likes_conteudo.id_conteudo",
         "conteudos.id_conteudo"
       )
-      .where({ ativo: true })
+      .where(this.onlyActive(onlyActive))
+      .whereIn('tags_conteudos.id_tag', tags)
       .select(this.selectContent())
       .select([
         "usuarios.nome as usuario_nome",
@@ -124,6 +127,10 @@ class ConteudoModel extends SimpleCRUD {
 
     return conteudo;
   };
+
+  private onlyActive = (active: boolean) => {
+    return active ? { ativo : true } : { }
+  }
 
   private tagsConteudos = async (conteudos: Array<object>) => {
     const tags = await Promise.all(
