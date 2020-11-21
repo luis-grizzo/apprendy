@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
+import { MdError } from 'react-icons/md';
 import { IconBaseProps } from 'react-icons/lib';
 import { useField } from '@unform/core';
 
@@ -63,11 +64,13 @@ const Input: React.FC<InputProps> = ({
           id={name}
           name={name}
           ref={inputRef}
-          className={`${styles.input} ${className}`}
+          value={defaultValue}
+          className={`${styles.input} ${className}  ${error && styles.error}`}
           {...rest}
         />
         {select && (
           <Select
+            name={name}
             selectWrapperClass={styles.selectField}
             className={`${styles.select} ${selectClass}`}
             options={selectOptions}
@@ -79,6 +82,12 @@ const Input: React.FC<InputProps> = ({
           </Button>
         )}
       </div>
+      {error && (
+        <div className={styles.errorMessage}>
+          <MdError className={styles.icon} />
+          <p className={styles.text}>{error}</p>
+        </div>
+      )}
     </div>
   );
 };

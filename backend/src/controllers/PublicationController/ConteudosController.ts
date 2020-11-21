@@ -33,7 +33,7 @@ class ConteudosController {
     const { pages, order, tags, onlyActive } = req.query
     
     const tagString = String(tags)
-    const tagsArray = tagString.split(",")
+    const tagsArray = tagString !== 'undefined' ? tagString.split(",") : []
 
     // return publication and tags
     let conteudos = await this._conteudoModel.indexConteudo(Number(pages), String(order), tagsArray, this.onlyActive(String(onlyActive)))
@@ -129,8 +129,8 @@ class ConteudosController {
     }
   }
 
-  private onlyActive = (active: string) => {
-    return active ? active : true
+  private onlyActive = (active: string): boolean => {
+    return active === 'true'
   }
 
   private addTags = async (id_conteudo: number, tags: Array<number>) => {

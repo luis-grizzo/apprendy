@@ -5,6 +5,7 @@
   grid-gap: 0
 
 .sidebar
+  align-self: flex-start
   position: sticky
   top: 70px
   background-color: $light
@@ -19,7 +20,7 @@
   .divider
     height: 1px
     width: 100%
-    background-color: $greyL2
+    background-color: $greyL3
 
   .link
     display: flex
@@ -33,7 +34,7 @@
     padding: 0 30px
 
     &:hover, &.active
-      background-color: $greyL2
+      background-color: $greyL3
 
     .icon
       font-size: $textSizeBig
@@ -45,23 +46,21 @@
   justify-content: space-between
   margin-bottom: 50px
 
-.content
-  .title
-    font-size: $headingSize2
+.form
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  grid-template-rows: repeat(autofit, auto)
+  // grid-template-rows: repeat(3, 1fr)
+  // grid-auto-rows: 1fr
+  grid-gap: 30px
 
-  .form
-    display: grid
-    grid-template-columns: repeat(2, 1fr)
-    grid-template-rows: repeat(3, 1fr)
-    grid-gap: 30px
+  .fullLine
+    grid-column-start: 1
+    grid-column-end: 3
 
-    .fullLine
-      grid-column-start: 1
-      grid-column-end: 3
+  .selectField
+    background-color: $light
 
-    .selectField
-      background-color: $light
-
-    .input, .select
-      height: 60px
-      background-color: $light
+  .input, .select
+    height: 60px
+    background-color: $light

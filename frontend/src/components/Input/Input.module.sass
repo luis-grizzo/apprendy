@@ -7,7 +7,7 @@
   justify-content: center
   margin-bottom: 30px
 
-  &:last-child
+  &:last-child, &.noMar
     margin-bottom: 0
 
 .label
@@ -18,6 +18,20 @@
 
 .label + .inputField
   margin-top: 5px
+
+.errorMessage
+  display: flex
+  align-items: center
+  margin-top: 10px
+
+  .icon
+    font-size: 20px
+    margin-right: 10px
+    color: $error
+
+  .text
+    font-weight: 500
+    color: $error
 
 .inputField
   display: flex
@@ -40,6 +54,9 @@
 
     &:last-child
       border-radius: 10px
+
+    &.error
+      border: 2px solid $error
 
   .selectField
     border-radius: 0 !important

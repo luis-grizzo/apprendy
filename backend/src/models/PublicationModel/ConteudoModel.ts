@@ -2,11 +2,14 @@ import FormatDate from "../../utils/FormatDate";
 import knex from "../../database/connection";
 
 import SimpleCRUD from "../SimpleCRUD";
+import { QueryBuilder } from "knex";
 
 class ConteudoModel extends SimpleCRUD {
   constructor() {
     super("conteudos");
   }
+
+  private _tags: Array<string> = [];
 
   public showPublication = async (id_conteudo: number) => {
     const getConteudo = await knex("conteudos")
@@ -89,6 +92,9 @@ class ConteudoModel extends SimpleCRUD {
   };
 
   public indexConteudo = async (pages: number, order: string, tags: Array<string>, onlyActive?: boolean) => {
+    
+    this._tags = tags
+    
     if (!pages) {
       pages = 1;
     }
@@ -111,7 +117,7 @@ class ConteudoModel extends SimpleCRUD {
         "conteudos.id_conteudo"
       )
       .where(this.onlyActive(onlyActive))
-      .whereIn('tags_conteudos.id_tag', tags)
+      .modify(this.whereTags)
       .select(this.selectContent())
       .select([
         "usuarios.nome as usuario_nome",
@@ -127,6 +133,15 @@ class ConteudoModel extends SimpleCRUD {
 
     return conteudo;
   };
+
+  private whereTags = (table: QueryBuilder) => {
+    console.log(this._tags)
+    if(this._tags.length > 0){
+      return table.whereIn('tags_conteudos.id_tag', this._tags)
+    }
+
+    return;
+  }
 
   private onlyActive = (active: boolean) => {
     return active ? { ativo : true } : { }

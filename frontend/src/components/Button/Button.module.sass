@@ -4,11 +4,12 @@
   display: flex
   align-items: center
   justify-content: center
-  background-color: $primaryD3
+  background-color: $primary
   color: $light
+  height: 36px
   border: 0
   border-radius: 10px
-  padding: 10px 20px
+  padding: 0 20px
   margin-right: 10px
   cursor: pointer
   text-transform: uppercase
@@ -20,17 +21,25 @@
   &:last-child
     margin-right: 0
 
+  &.large
+    height: 44px
+    padding: 0 24px
+    font-size: 16px
+
+    .icon
+      font-size: 20px
+
   &:hover
-    background-color: darken($primaryD3, 10%)
+    background-color: darken($primary, 10%)
 
   &.outline
     height: 36px
     background-color: transparent
-    border: 2px solid $primaryD3
-    color: $primaryD3
+    border: 2px solid $primary
+    color: $primary
 
     &:hover
-      background-color: transparentize($primaryD3, .9)
+      background-color: transparentize($primary, .9)
 
   &.contrast
     background-color: $contrast

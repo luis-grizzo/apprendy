@@ -6,6 +6,7 @@ import UsersDashboard from './controllers/UserController/UsersDashboard'
 import TipoUsersController from './controllers/UserController/TipoUsersController'
 import NotificationController from './controllers/UserController/NotificationController'
 import GetAnswerSecurity from './controllers/UserController/GetAnswerSecurity'
+import UploadController from './controllers/UploadController'
 
 import CategoriaController from './controllers/PublicationController/CategoriaController'
 import TagsController from './controllers/PublicationController/TagsController'
@@ -19,7 +20,19 @@ import RespostaController from './controllers/CommunityController/RespostaContro
 
 import Authorizations from './auth/Authorizations'
 
+// Multer
+import multer from 'multer'
+import multerConfig from './configs/multer'
+
 const routes = Router()
+
+const upload = multer(multerConfig)
+
+routes.post(
+  '/uploads',
+  upload.single('upload'),
+  UploadController.store
+);
 
 routes.post('/signup', SessionController.signup)
 routes.post('/signin', SessionController.signin)
