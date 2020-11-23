@@ -79,12 +79,30 @@
     margin: 30px 0
 
 .commentCard
+  position: relative
   display: grid
   grid-template-columns: auto 1fr
   margin-bottom: 50px
 
   &:last-child
     margin-bottom: 0
+
+  &.bestAnswer
+    border: 3px solid $success
+
+    &::after
+      content: 'Melhor reposta'
+      text-transform: uppercase
+      font-weight: 700
+      font-size: $textSizeSamaller
+      position: absolute
+      top: 0
+      right: 30px
+      transform: translateY(-50%)
+      background-color: $success
+      color: $light
+      padding: 10px 20px
+      border-radius: 10px
 
   .cardContent
     display: flex
@@ -139,16 +157,11 @@
 
 .commentForm
     display: flex
-    align-items: center
-    justify-content: flex-start
+    flex-direction: column
+    align-items: flex-end
+    justify-content: center
+    width: 100%
 
-    .inputContainer
+    .textareaContainer
       flex: 1
-
-    .input, .button
-      height: 50px
-
-    .input
-      flex: 1
-      padding: 0 30px
-      background-color: $greyL3
+      width: 100%

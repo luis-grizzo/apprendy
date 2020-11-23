@@ -1,6 +1,19 @@
 @import '../../App.sass'
 @import '../../components/Button/Button.module.sass'
 
+.form
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  grid-template-rows: repeat(autofit, auto)
+  grid-gap: 30px
+
+  .fullLine
+    grid-column-start: 1
+    grid-column-end: 3
+
+  .input, .select
+    height: 60px
+
 .parallax
   z-index: -1
 

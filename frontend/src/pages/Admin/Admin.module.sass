@@ -19,7 +19,7 @@
   .divider
     height: 1px
     width: 100%
-    background-color: $greyL2
+    background-color: $greyL3
 
   .link
     display: flex
@@ -33,7 +33,7 @@
     padding: 0 30px
 
     &:hover, &.active
-      background-color: $greyL2
+      background-color: $greyL3
 
     .icon
       font-size: $textSizeBig
@@ -44,3 +44,46 @@
   align-items: center
   justify-content: space-between
   margin-bottom: 50px
+
+.tableWrapper
+  position: relative
+  width: 100%
+  min-height: 130px
+  overflow-y: hidden
+
+  table
+    width: 100%
+    border-collapse: collapse
+    border-spacing: 0
+
+    th
+      padding: 2rem 1.2rem
+      font-size: 16px
+      background: $greyL2
+      text-align: inherit
+      vertical-align: inherit
+      font-weight: 700
+      text-transform: none
+
+      &:first-of-type
+        border-top-left-radius: 10px
+
+      &:last-of-type
+        border-top-right-radius: 10px
+
+    td
+      font-size: 15px
+      padding: 1.2rem
+      text-align: left
+      vertical-align: middle
+      min-width: 124px
+
+      &.actionsTd
+        display: flex
+        align-items: center
+
+        .action
+          margin-right: 5px
+
+          &:last-of-type
+            margin: 0

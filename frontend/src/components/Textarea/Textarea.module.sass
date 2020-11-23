@@ -1,0 +1,60 @@
+@import '../../App.sass'
+
+.textareaContainer
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  justify-content: center
+  margin-bottom: 30px
+
+  &:last-child, &.noMar
+    margin-bottom: 0
+
+.label
+  font-size: $headingSize6
+  font-family: $titleFont
+  font-weight: 700
+  color: $dark
+
+.label + .textareaField
+  margin-top: 5px
+
+.errorMessage
+  display: flex
+  align-items: center
+  margin-top: 10px
+
+  .icon
+    font-size: 20px
+    margin-right: 10px
+    color: $error
+
+  .text
+    font-weight: 500
+    color: $error
+
+.textareaField
+  display: flex
+  align-items: center
+  justify-content: flex-start
+  width: 100%
+  font-size: 14px
+  background-color: $greyL3
+  border: 0
+  border-radius: 10px
+
+  .textarea
+    flex: 1
+    height: 120px
+    padding: 20px
+    font-size: 16px
+    background-color: transparent
+    border: 0
+    border-radius: 10px 0 0 10px
+    resize: vertical
+
+    &:last-child
+      border-radius: 10px
+
+    &.error
+      border: 2px solid $error

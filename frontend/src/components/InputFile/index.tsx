@@ -1,7 +1,14 @@
-import React, { InputHTMLAttributes, useEffect, useRef, useState } from 'react';
+/* eslint-disable no-param-reassign */
+import React, {
+  InputHTMLAttributes,
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+  ChangeEvent,
+} from 'react';
 import { useField } from '@unform/core';
-import { MdImage } from 'react-icons/md';
-import { IconBaseProps } from 'react-icons/lib';
+import { MdImage, MdError } from 'react-icons/md';
 
 import Button from '../Button';
 
@@ -15,8 +22,6 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   inputWrapperClass?: string;
   className?: string;
-  buttonLabel?: string;
-  buttonIcon?: React.ComponentType<IconBaseProps>;
 }
 
 const InputFile: React.FC<InputProps> = ({
@@ -25,28 +30,39 @@ const InputFile: React.FC<InputProps> = ({
   containerClass,
   inputWrapperClass,
   className,
-  buttonLabel,
-  buttonIcon: ButtonIcon,
   ...rest
 }) => {
-  const [imageFile, setImageFile] = useState('');
-
-  const inputRef: any = useRef(null);
-  const imgRef: any = useRef(null);
-  const { fieldName, defaultValue, error, registerField } = useField(name);
+  const inputRef: any = useRef<HTMLInputElement>(null);
+  const { fieldName, registerField, defaultValue, error } = useField(name);
+  const [preview, setPreview] = useState(defaultValue);
+  const handlePreview = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setPreview(null);
+    }
+    const previewURL = URL.createObjectURL(file);
+    setPreview(previewURL);
+  }, []);
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputRef.current,
+      path: 'files[0]',
+      clearValue(ref: HTMLInputElement) {
+        ref.value = '';
+        setPreview(null);
+      },
+      setValue(_: HTMLInputElement, value: string) {
+        setPreview(value);
+      },
+    });
+  }, [fieldName, registerField]);
 
   const openFilePicker = () => {
     if (inputRef !== null) {
       inputRef.current.click();
     }
   };
-
-  const handlePreviewChange = () => {
-    const file = inputRef.current.value;
-
-    imgRef.current.src = file;
-  };
-
   return (
     <>
       <div className={`${styles.inputContainer} ${containerClass}`}>
@@ -55,22 +71,25 @@ const InputFile: React.FC<InputProps> = ({
             {label}
           </label>
         )}
-        <div className={`${styles.inputField} ${inputWrapperClass}`}>
+        <div
+          className={`${styles.inputField} ${
+            error && styles.error
+          } ${inputWrapperClass}`}
+        >
           <input
             id={name}
             type="file"
             name={name}
             ref={inputRef}
-            onChange={handlePreviewChange}
-            value={imageFile}
+            onChange={handlePreview}
+            accept="image/*"
             className={`${styles.inputFile} ${className}`}
             {...rest}
           />
           <div className={styles.preview}>
             <img
-              src={defaultImage}
+              src={preview || defaultImage}
               alt={name}
-              ref={imgRef}
               className={styles.img}
             />
           </div>
@@ -82,6 +101,12 @@ const InputFile: React.FC<InputProps> = ({
             Escolher imagem
           </Button>
         </div>
+        {error && (
+          <div className={styles.errorMessage}>
+            <MdError className={styles.icon} />
+            <p className={styles.text}>{error}</p>
+          </div>
+        )}
       </div>
     </>
   );

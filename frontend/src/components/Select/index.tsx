@@ -13,6 +13,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   name: string;
   label?: string;
   options: Array<OptionHTMLAttributes<HTMLOptionElement>> | undefined;
+  initialDefaultValue?: boolean;
   containerClass?: string;
   selectWrapperClass?: string;
   className?: string;
@@ -22,6 +23,7 @@ const Select: React.FC<SelectProps> = ({
   name,
   label,
   options,
+  initialDefaultValue,
   containerClass,
   selectWrapperClass,
   className,
@@ -57,7 +59,9 @@ const Select: React.FC<SelectProps> = ({
           className={`${styles.select} ${error && styles.error} ${className}`}
           {...rest}
         >
-          <option value={-1}>Selecione uma opção</option>
+          {initialDefaultValue && (
+            <option value={-1}>Selecione uma opção</option>
+          )}
           {options &&
             options.map((option, index) => (
               // eslint-disable-next-line react/no-array-index-key

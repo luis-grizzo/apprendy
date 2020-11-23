@@ -5,13 +5,18 @@ import styles from './Modal.module.sass';
 interface ModalProps {
   open?: boolean;
   title?: string;
+  headerContent?: any;
   className?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ open, title, className, children }) => {
+const Modal: React.FC<ModalProps> = ({
+  open,
+  title,
+  headerContent,
+  className,
+  children,
+}) => {
   const [modalOpen, setModalOpen] = useState(open);
-  console.log('Modal page - Prop', open);
-  console.log('Modal page - State', modalOpen);
 
   useEffect(() => {
     setModalOpen(open);
@@ -28,7 +33,10 @@ const Modal: React.FC<ModalProps> = ({ open, title, className, children }) => {
           modalOpen ? styles.open : ''
         }`}
       >
-        <h1 className={styles.title}>{title}</h1>
+        <div className={styles.modalHeader}>
+          <h1 className={styles.title}>{title}</h1>
+          {headerContent}
+        </div>
         <div className={styles.container}>{children}</div>
       </article>
       <div

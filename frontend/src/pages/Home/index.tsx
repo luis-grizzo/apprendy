@@ -12,7 +12,7 @@ import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
 
 import styles from './Home.module.sass';
-import homeHeader from '../../assets/testImage2.jpg';
+import homeHeader from '../../assets/home.jpg';
 
 import api from '../../services/api';
 
@@ -109,7 +109,7 @@ const Home: React.FC = () => {
       </section>
       <section className="section container">
         <h2 className={styles.title}>Ultimos posts</h2>
-        <div className="gridAuto">
+        <div className={styles.gridAuto}>
           {posts.map(post => (
             <Card
               key={post.publicacao.id_conteudo}

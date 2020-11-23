@@ -7,6 +7,7 @@ import {
   MdDashboard,
   MdAdd,
   MdPeople,
+  MdChat,
   MdPowerSettingsNew,
 } from 'react-icons/md';
 import { Link, useHistory } from 'react-router-dom';
@@ -21,8 +22,8 @@ import api from '../../services/api';
 import styles from './Navbar.module.sass';
 
 import logo from '../../assets/logo.svg';
-import userDefaultImage from '../../assets/user.png';
-import background from '../../assets/testImage.jpg';
+import userDefaultImage from '../../assets/noUserImage.jpg';
+import background from '../../assets/defaultBackground.png';
 
 interface NavbarProps {
   logged?: boolean;
@@ -94,23 +95,30 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
             <div className={styles.buttonsWrapper}>
               {user.id_tipo === 3 && (
                 <Link to="/admin/resources" className={styles.link}>
-                  <Button type="button" variant="contrast" icon={MdDashboard}>
+                  Painel Adm
+                  {/* <Button type="button" variant="contrast" icon={MdDashboard}>
                     Painel adm
-                  </Button>
-                </Link>
-              )}
-              {logged && (
-                <Link to="/content/resource" className={styles.link}>
-                  <Button type="button" disabled={!logged} icon={MdAdd}>
-                    Criar conteúdo
-                  </Button>
+                  </Button> */}
                 </Link>
               )}
               <Link to="/comunity" className={styles.link}>
-                <Button type="button" variant="outline" icon={MdPeople}>
+                Comunidade
+                {/* <Button type="button" variant="outline" icon={MdPeople}>
                   Comunidade
-                </Button>
+                </Button> */}
               </Link>
+              {logged && (
+                <Link to="/content/resource" className={styles.linkButton}>
+                  <Button
+                    type="button"
+                    disabled={!logged}
+                    variant="outline"
+                    icon={MdAdd}
+                  >
+                    Publicar Recurso
+                  </Button>
+                </Link>
+              )}
             </div>
             {logged ? (
               <button
@@ -177,7 +185,7 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
               </li>
               <li className={styles.divider} />
               <li>
-                <Link to="/content/resource" className={styles.link}>
+                <Link to="/content/tag" className={styles.link}>
                   <MdAdd className={styles.icon} />
                   Criar conteúdo
                 </Link>
@@ -187,6 +195,13 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
                 <Link to="/comunity" className={styles.link}>
                   <MdPeople className={styles.icon} />
                   Comunidade
+                </Link>
+              </li>
+              <li className={styles.divider} />
+              <li>
+                <Link to="/content/question" className={styles.link}>
+                  <MdChat className={styles.icon} />
+                  Fazer uma pergunta
                 </Link>
               </li>
               <li className={styles.divider} />

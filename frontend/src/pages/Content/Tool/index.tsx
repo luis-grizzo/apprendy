@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useRef, useState } from 'react';
 import { FormHandles } from '@unform/core';
@@ -8,6 +9,7 @@ import { toast } from 'react-toastify';
 
 import { displayErrors } from '../../../util/error';
 import api from '../../../services/api';
+import { uploadFile } from '../../../util/upload';
 
 import Menu from '../Menu';
 
@@ -46,13 +48,20 @@ const tool: React.FC = () => {
           .required('Este compo é obrigatório')
           .min(3, 'Este campo deve conter ao minimo 3 caracteres'),
         id_categoria: Yup.number().moreThan(0, 'Este campo é obrigatório'),
+        icone: Yup.object()
+          .shape({
+            type: Yup.string().required('A imagem é obrigatória'),
+          })
+          .nullable(),
       });
 
       await schema.validate(data, {
         abortEarly: false,
       });
 
-      await api.post('/tags', data);
+      data.icone = await uploadFile(data.icone as File);
+
+      await api.post('/ferramentas', data);
       toast.success('✅ Ferramenta cadastrada com sucesso!');
 
       formRef.current.reset();
@@ -103,14 +112,15 @@ const tool: React.FC = () => {
                 name="id_categoria"
                 label="Categoria"
                 options={categorias}
+                initialDefaultValue
                 className={styles.input}
                 selectWrapperClass={styles.input}
-                containerClass={styles.noMar}
+                containerClass={`${styles.noMar} ${styles.fullLine}`}
               />
               <InputFile
                 name="icone"
                 label="Icone"
-                containerClass={styles.noMar}
+                containerClass={`${styles.noMar} ${styles.fullLine}`}
               />
             </Form>
           </div>

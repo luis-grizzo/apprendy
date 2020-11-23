@@ -1,10 +1,13 @@
+/* eslint-disable no-multi-str */
+/* eslint-disable no-param-reassign */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useRef, useEffect, useState } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
-import { MdSend, MdImage } from 'react-icons/md';
+import { MdSend } from 'react-icons/md';
+import { Editor } from '@tinymce/tinymce-react';
 
 import { displayErrors } from '../../../util/error';
 import api from '../../../services/api';
@@ -38,9 +41,18 @@ interface selectOptions {
   selected?: boolean;
 }
 
+interface EditorContent {
+  level: {
+    bookmark: {
+      content: string;
+    };
+  };
+}
+
 const resource: React.FC = () => {
   const [tags, setTags] = useState<selectOptions[]>([]);
   const [ferramentas, setFerramentas] = useState<selectOptions[]>([]);
+  const [conteudo, setConteudo] = useState<any>('');
 
   const formRef: any = useRef<FormHandles>(null);
 
@@ -69,6 +81,8 @@ const resource: React.FC = () => {
       // Remove all previous errors
       formRef.current.setErrors({});
 
+      console.log(conteudo.level.bookmark.content);
+
       const schema = Yup.object().shape({
         titulo: Yup.string()
           .required('Este compo é obrigatório')
@@ -78,13 +92,24 @@ const resource: React.FC = () => {
         descricao: Yup.string()
           .required('Este compo é obrigatório')
           .min(20, 'Este campo deve conter ao minimo 20 caracteres'),
+        // imagem: Yup.object().required('A imagem é obrigatória'),
       });
 
       await schema.validate(data, {
         abortEarly: false,
       });
 
-      await api.post('/tags', data);
+      const formData = new FormData();
+      formData.append('upload', data.imagem as File);
+
+      const response = await api.post('/uploads', formData);
+
+      data.imagem = response.data.url;
+      data.conteudo = conteudo;
+      data.tag = [1, 2, 3];
+      data.ativo = true;
+
+      await api.post('/conteudos', data);
       toast.success('✅ Recurso cadastrado com sucesso!');
 
       formRef.current.reset();
@@ -121,15 +146,16 @@ const resource: React.FC = () => {
                 containerClass={`${styles.fullLine} ${styles.noMar}`}
               />
               <Select
-                name="tags"
+                name="tags[]"
                 label="Tags"
+                multiple
                 options={tags}
                 className={styles.input}
                 selectWrapperClass={styles.input}
                 containerClass={styles.noMar}
               />
               <Select
-                name="ferramenta"
+                name="id_ferramenta"
                 label="Ferramenta"
                 options={ferramentas}
                 className={styles.input}
@@ -146,14 +172,27 @@ const resource: React.FC = () => {
               <InputFile
                 name="imagem"
                 label="Imagem"
-                buttonLabel="Escolher imagem"
-                buttonIcon={MdImage}
                 className={styles.input}
                 containerClass={`${styles.fullLine} ${styles.noMar}`}
               />
-              <div className="comment">
-                Aqui será aplicado o componente de edição de texto
-              </div>
+              <Editor
+                initialValue="<p>Initial content</p>"
+                init={{
+                  height: 500,
+                  menubar: false,
+                  plugins: [
+                    'advlist autolink lists link image',
+                    'charmap print preview anchor help',
+                    'searchreplace visualblocks code',
+                    'insertdatetime media table paste wordcount',
+                  ],
+                  toolbar:
+                    'undo redo | formatselect | bold italic | \
+                    alignleft aligncenter alignright | \
+                    bullist numlist outdent indent | help',
+                }}
+                onChange={content => setConteudo(content)}
+              />
             </Form>
           </div>
         </section>

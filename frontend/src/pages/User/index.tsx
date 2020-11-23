@@ -1,23 +1,37 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Parallax } from 'react-parallax';
 import { Form } from '@unform/web';
-import { MdEdit, MdDateRange, MdFavorite, MdBook } from 'react-icons/md';
+import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import {
+  MdEdit,
+  MdDateRange,
+  MdFavorite,
+  MdBook,
+  MdSave,
+} from 'react-icons/md';
 
+import { displayErrors } from '../../util/error';
+import api from '../../services/api';
+
+import Modal from '../../components/Modal';
+import Input from '../../components/Input';
+import InputFile from '../../components/InputFile';
 import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
 import CardPanel from '../../components/CardPanel';
-import Modal from '../../components/Modal';
 import Card from '../../components/Card';
 import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
 
 import styles from './User.module.sass';
 
-import userImage from '../../assets/user.png';
-import testImage from '../../assets/testImage.jpg';
-import api from '../../services/api';
+import noUserImage from '../../assets/noUserImage.jpg';
+import testImage from '../../assets/defaultBackground.png';
 import user from '../Content/User';
 
 interface Params {
@@ -43,6 +57,7 @@ interface UserData {
   user: {
     id_usuario: number;
     nome: string;
+    email: string;
     foto_perfil: string;
     texto_perfil: string;
     capa_perfil: string;
@@ -60,6 +75,8 @@ const User: React.FC = () => {
   const [infoLoading, setInfoLoading] = useState('Carregando...');
   const [userData, setUserData] = useState<UserData>();
 
+  const formRef: any = useRef<FormHandles>(null);
+
   useEffect(() => {
     api
       .get(`/users/${params.id}/info`)
@@ -76,8 +93,50 @@ const User: React.FC = () => {
     console.log('Novo valor - user page', modalOpen);
   };
 
-  const handleUserUpdate = (data: Record<string, unknown>) => {
-    console.log(data);
+  const handleUserUpdate = async (data: Record<string, unknown>) => {
+    try {
+      // Remove all previous errors
+      formRef.current.setErrors({});
+
+      console.log(data);
+
+      const schema = Yup.object().shape({
+        nome: Yup.string().required('Este compo é obrigatório'),
+        email: Yup.string().required('Este compo é obrigatório'),
+        texto_perfil: Yup.string().required('Este compo é obrigatório'),
+        foto_perfil: Yup.object()
+          .shape({
+            type: Yup.string().required('A imagem é obrigatória'),
+          })
+          .nullable(),
+        capa_perfil: Yup.object()
+          .shape({
+            type: Yup.string().required('A imagem é obrigatória'),
+          })
+          .nullable(),
+      });
+
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      const formData = new FormData();
+      formData.append('upload', data.foto_perfil as File);
+      const foto_perfilResponse = await api.post('/uploads', formData);
+      data.foto_perfil = foto_perfilResponse.data.url;
+
+      formData.set('upload', data.capa_perfil as File);
+      const capa_perfilResponse = await api.post('/uploads', formData);
+      data.capa_perfil = capa_perfilResponse.data.url;
+
+      await api.put('/users', data);
+      toast.success('✅ Perfil atualizado com sucesso!');
+
+      formRef.current.reset();
+    } catch (err) {
+      displayErrors(err, formRef);
+      toast.error('❌ Erro ao autalizar o perfil!');
+    }
   };
 
   if (!userData) {
@@ -97,9 +156,55 @@ const User: React.FC = () => {
 
   return (
     <>
-      <Modal open={modalOpen} title="Alterar dados da conta">
-        <Form onSubmit={handleUserUpdate}>
-          <p>banana</p>
+      <Modal
+        open={modalOpen}
+        title="Alterar dados da conta"
+        headerContent={
+          // eslint-disable-next-line react/jsx-wrap-multilines
+          <Button
+            icon={MdSave}
+            size="large"
+            variant="contrast"
+            onClick={() => formRef.current.submitForm()}
+          >
+            Salvar perfil
+          </Button>
+        }
+      >
+        <Form
+          ref={formRef}
+          onSubmit={handleUserUpdate}
+          className={styles.form}
+          initialData={userData.user}
+        >
+          <Input
+            name="nome"
+            label="Nome"
+            className={styles.input}
+            containerClass={styles.noMar}
+          />
+          <Input
+            name="email"
+            label="Email"
+            className={styles.input}
+            containerClass={styles.noMar}
+          />
+          <Input
+            name="texto_perfil"
+            label="Bio"
+            className={styles.input}
+            containerClass={`${styles.noMar} ${styles.fullLine}`}
+          />
+          <InputFile
+            name="foto_perfil"
+            label="Foto de perfil"
+            containerClass={styles.noMar}
+          />
+          <InputFile
+            name="capa_perfil"
+            label="Foto de capa"
+            containerClass={styles.noMar}
+          />
         </Form>
       </Modal>
       <Navbar logged />
@@ -120,7 +225,7 @@ const User: React.FC = () => {
                   src={
                     userData.user.foto_perfil
                       ? userData.user.foto_perfil
-                      : userImage
+                      : noUserImage
                   }
                   alt="Name"
                   className={styles.img}
@@ -129,7 +234,6 @@ const User: React.FC = () => {
               <Button
                 type="button"
                 icon={MdEdit}
-                variant="outline"
                 className={styles.button}
                 onClick={handleModal}
               >
@@ -148,7 +252,9 @@ const User: React.FC = () => {
                 <MdFavorite className={styles.icon} />
                 {`${userData.likes.length} Favoritos`}
               </div>
-              <p className={styles.bio}>{userData.user.texto_perfil}</p>
+              {userData.user.texto_perfil && (
+                <p className={styles.bio}>{userData.user.texto_perfil}</p>
+              )}
             </div>
           </CardPanel>
         </section>
@@ -158,17 +264,25 @@ const User: React.FC = () => {
             {` ${userData.user.nome}`}
           </h2>
           <div className="gridAuto">
-            {userData.likes.map(post => (
-              <Card
-                key={post.publicacao.id_conteudo}
-                postId={post.publicacao.id_conteudo}
-                image={post.publicacao.imagem}
-                title={post.publicacao.titulo}
-                date={post.publicacao.data_publicacao}
-                description={post.publicacao.descricao}
-                tags={post.tag}
-              />
-            ))}
+            {userData.likes ? (
+              userData.likes.map(post => (
+                <Card
+                  key={post.publicacao.id_conteudo}
+                  postId={post.publicacao.id_conteudo}
+                  image={post.publicacao.imagem}
+                  title={post.publicacao.titulo}
+                  date={post.publicacao.data_publicacao}
+                  description={post.publicacao.descricao}
+                  tags={post.tag}
+                />
+              ))
+            ) : (
+              <p>
+                {userData.user.nome}
+                Não tem posts favoritos ainda
+              </p>
+            )}
+            {}
           </div>
         </section>
         <section className="section container">

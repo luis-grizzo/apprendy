@@ -18,10 +18,10 @@ const Comunity: React.FC = () => {
           <div className={styles.container}>
             <div className={styles.filterGroup}>
               <h3 className={styles.title}>Categorias</h3>
-              <Switch label="Categoria 1" />
-              <Switch label="Categoria 1" />
-              <Switch label="Categoria 1" />
-              <Switch label="Categoria 1" />
+              <Switch name="categoria1" label="Categoria 1" />
+              <Switch name="categoria2" label="Categoria 1" />
+              <Switch name="categoria3" label="Categoria 1" />
+              <Switch name="categoria4" label="Categoria 1" />
             </div>
           </div>
         </aside>

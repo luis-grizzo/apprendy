@@ -73,6 +73,7 @@ const Search: React.FC = () => {
               {categories.map((category, index) => (
                 <Switch
                   key={category.id_categoria}
+                  name={category.descritivo}
                   label={category.descritivo}
                   isChecked={
                     `?category=${category.id_categoria}` === params.search
@@ -86,6 +87,7 @@ const Search: React.FC = () => {
               {tags.map((tag, index) => (
                 <Switch
                   key={tag.id_tag}
+                  name={tag.descritivo}
                   label={tag.descritivo}
                   isChecked={`?tags=${tag.id_tag}` === params.search}
                   onChange={() => handleSwitchTag(index, tag.id_tag)}

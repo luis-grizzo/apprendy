@@ -14,11 +14,11 @@ import Footer from '../../components/Footer';
 
 import styles from './Post.module.sass';
 
-import backgroundImage from '../../assets/testImage.jpg';
-import authorImage from '../../assets/user.png';
-import commentImage from '../../assets/testImage1.jpg';
+import backgroundImage from '../../assets/defaultBackground.png';
+import commentImage from '../../assets/noUserImage.jpg';
 import api from '../../services/api';
 import tags from '../Admin/Tags';
+import Textarea from '../../components/Textarea';
 
 interface Params {
   id: string;
@@ -98,7 +98,7 @@ const Post: React.FC = () => {
         <section className="section">
           <CardPanel
             className={styles.postCard}
-            image={authorImage}
+            image={commentImage}
             imageAlt="name"
           >
             <div className={styles.authorInfos}>
@@ -165,20 +165,19 @@ const Post: React.FC = () => {
           </CardPanel>
           <CardPanel
             className={styles.commentCard}
-            image={authorImage}
+            image={commentImage}
             imageAlt="name"
           >
             <Form onSubmit={handleSubmit} className={styles.commentForm}>
-              <Input
+              <Textarea
                 name="comentario"
-                label="Deixe um comentário"
-                placeholder="Sua mensagem..."
-                containerClass={styles.inputContainer}
-                button
-                buttonClass={styles.button}
-                buttonIcon={MdSend}
-                className={styles.input}
+                label="Comentário"
+                placeholder="Seu comentário..."
+                containerClass={styles.textareaContainer}
               />
+              <Button type="submit" icon={MdSend}>
+                Adicionar comentário
+              </Button>
             </Form>
           </CardPanel>
         </section>

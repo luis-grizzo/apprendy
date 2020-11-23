@@ -11,7 +11,7 @@
     display: flex
     align-items: center
     justify-content: space-between
-    padding: 10px 0
+    height: 70px
 
     .logoWrapper
       height: 50px
@@ -31,11 +31,20 @@
       align-items: center
       justify-content: flex-end
 
-      .link
-        margin-right: 10px
+      .linkButton
+        margin-left: 10px
 
-        &:last-of-type
-          margin-right: 0
+      .link
+        display: flex
+        align-items: center
+        color: $dark
+        height: 70px
+        padding: 0 10px
+        will-change: background-color
+        transition: $defaultTransition
+
+        &:hover
+          background-color: $greyL3
 
       .form
         display: flex

@@ -10,8 +10,9 @@ import Footer from '../../components/Footer';
 
 import styles from './Question.module.sass';
 
-import contentImage from '../../assets/testImage2.jpg';
+import contentImage from '../../assets/noUserImage.jpg';
 import Button from '../../components/Button';
+import Textarea from '../../components/Textarea';
 
 const Question: React.FC = () => {
   const handleSubmit = (data: Record<string, unknown>) => {
@@ -80,7 +81,7 @@ const Question: React.FC = () => {
             <CardPanel
               image={contentImage}
               imageAlt="Name"
-              className={styles.commentCard}
+              className={`${styles.commentCard} ${styles.bestAnswer}`}
             >
               <div className={styles.cardContent}>
                 <div className={styles.infos}>
@@ -111,16 +112,15 @@ const Question: React.FC = () => {
               imageAlt="name"
             >
               <Form onSubmit={handleSubmit} className={styles.commentForm}>
-                <Input
+                <Textarea
                   name="comentario"
-                  label="Deixe um comentário"
-                  placeholder="Sua mensagem..."
-                  containerClass={styles.inputContainer}
-                  button
-                  buttonClass={styles.button}
-                  buttonIcon={MdSend}
-                  className={styles.input}
+                  label="Comentário"
+                  placeholder="Seu comentário..."
+                  containerClass={styles.textareaContainer}
                 />
+                <Button type="submit" icon={MdSend}>
+                  Adicionar comentário
+                </Button>
               </Form>
             </CardPanel>
           </div>
