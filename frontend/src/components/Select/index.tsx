@@ -70,7 +70,7 @@ const Select: React.FC<SelectProps> = ({
               </option>
             ))}
         </select>
-        <MdArrowDropDown className={styles.icon} />
+        {!rest.multiple && <MdArrowDropDown className={styles.icon} />}
       </div>
       {error && (
         <div className={styles.errorMessage}>

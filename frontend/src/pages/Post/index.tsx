@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-
 import { Parallax } from 'react-parallax';
 import { Form } from '@unform/web';
+import { Markup } from 'interweave';
 import { MdToday, MdFavorite, MdSend } from 'react-icons/md';
 
 import Navbar from '../../components/Navbar';
@@ -138,8 +138,9 @@ const Post: React.FC = () => {
             />
           </CardPanel>
         </section>
+
         <section className={`section ${styles.content}`}>
-          {post.publicacao.conteudo}
+          <Markup content={post.publicacao.conteudo} />
         </section>
         <section className="section">
           <CardPanel

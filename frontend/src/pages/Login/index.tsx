@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useAlert as RcAlert } from 'react-alert';
 import { Form } from '@unform/web';
-import { MdAccountCircle, MdSend, MdLockOpen, MdUndo } from 'react-icons/md';
+import {
+  MdAccountCircle,
+  MdSend,
+  MdLockOpen,
+  MdUndo,
+  MdSearch,
+} from 'react-icons/md';
 
 import CardPanel from '../../components/CardPanel';
 import Input from '../../components/Input';
@@ -124,6 +130,7 @@ const Login: React.FC = () => {
 
     if (!response.data.pergunta_seguranca) {
       alertMsg.error('Nenhum pergunta foi encontrada, Verifique o seu e-mail!');
+      setAnswerSecurity('');
 
       return;
     }
@@ -138,9 +145,16 @@ const Login: React.FC = () => {
           className={`section ${styles.containerFluid} ${styles.content}`}
         >
           <h1 className={styles.title}>
-            {(questionForm && 'Responda sua P.S.') ||
-              (passwordForm && 'Redefinir senha') ||
-              'Realizar login'}
+            {(loginForm && 'Realizar login') ||
+              (questionForm && answerSecurity ? (
+                <span>
+                  Sua pergunta é:
+                  <span className={styles.answer}>{answerSecurity}</span>
+                </span>
+              ) : (
+                'Responda sua P.S.'
+              )) ||
+              (passwordForm && 'Redefinir senha')}
           </h1>
           <CardPanel className={styles.card}>
             <Form
@@ -189,8 +203,13 @@ const Login: React.FC = () => {
                 placeholder="exemplo@exemplo.com"
                 className={styles.input}
                 onChange={e => setEmail(e.target.value)}
+                button
+                buttonType="button"
+                buttonIcon={MdSearch}
+                buttonClass={styles.inputButton}
+                buttonOnCLick={handleGetAnswerSecurity}
               />
-              <Input
+              {/* <Input
                 name="pergunta"
                 type="text"
                 label="Pergunta de segurança"
@@ -199,13 +218,14 @@ const Login: React.FC = () => {
                 value={answerSecurity}
                 onClick={handleGetAnswerSecurity}
                 readOnly
-              />
+              /> */}
               <Input
                 name="resposta"
                 type="text"
                 label="Resposta"
                 placeholder="Sua resposta"
                 className={styles.input}
+                disabled={!answerSecurity}
               />
               <div className={styles.formFooter}>
                 <Button

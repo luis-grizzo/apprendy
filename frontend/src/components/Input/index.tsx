@@ -1,5 +1,6 @@
 import React, {
   InputHTMLAttributes,
+  MouseEventHandler,
   OptionHTMLAttributes,
   useEffect,
   useRef,
@@ -23,8 +24,10 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   selectOptions?: Array<OptionHTMLAttributes<HTMLOptionElement>>;
   selectClass?: string;
   button?: boolean;
+  buttonType?: 'button' | 'submit' | 'reset' | undefined;
   buttonClass?: string;
   buttonIcon?: React.ComponentType<IconBaseProps>;
+  buttonOnCLick?: MouseEventHandler;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -37,8 +40,10 @@ const Input: React.FC<InputProps> = ({
   selectOptions,
   selectClass,
   button,
+  buttonType,
   buttonClass,
   buttonIcon: ButtonIcon,
+  buttonOnCLick,
   ...rest
 }) => {
   const inputRef = useRef(null);
@@ -77,7 +82,11 @@ const Input: React.FC<InputProps> = ({
           />
         )}
         {button && (
-          <Button type="submit" className={`${styles.button} ${buttonClass}`}>
+          <Button
+            type={buttonType}
+            className={`${styles.button} ${buttonClass}`}
+            onClick={buttonOnCLick}
+          >
             {ButtonIcon && <ButtonIcon className={styles.buttonIcon} />}
           </Button>
         )}

@@ -8,8 +8,17 @@
   .title
     font-size: $headingSize3
     margin-bottom: 30px
+    transition: $defaultTransition
+
+  .answer
+    display: block
+    font-size: $headingSize4
+    color: $primary
+    margin-top: 10px
 
   .content
+    overflow-y: auto
+
     .card
       grid-template-columns: 100% 100% 100%
       grid-gap: 0
@@ -58,6 +67,9 @@
         padding: 0 20px
         width: 100%
         border-radius: 10px
+
+      .inputButton
+        height: 60px
 
       .formFooter
         display: flex

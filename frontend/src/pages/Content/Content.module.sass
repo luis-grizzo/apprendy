@@ -56,15 +56,16 @@
   background-color: $greyL3
   border-bottom: 3px solid $greyL2
 
+  .title
+    font-size: $headingSize4
+
 .form
   display: grid
   grid-template-columns: repeat(2, 1fr)
   grid-template-rows: repeat(autofit, auto)
-  // grid-template-rows: repeat(3, 1fr)
-  // grid-auto-rows: 1fr
   grid-gap: 30px
 
-  .fullLine
+  .fullLine, .editorContainer
     grid-column-start: 1
     grid-column-end: 3
 
@@ -74,3 +75,9 @@
   .input, .select
     height: 60px
     background-color: $light
+
+  .selectMult
+    height: 100%
+    background-color: $light
+    padding: 10px
+    text-transform: capitalize

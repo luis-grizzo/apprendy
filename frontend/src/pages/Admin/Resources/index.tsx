@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react';
-import { MdAdd, MdLooks, MdEdit } from 'react-icons/md';
+import { MdAdd, MdRemoveRedEye, MdEdit } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 import api from '../../../services/api';
@@ -52,7 +52,12 @@ const resources: React.FC = () => {
             <div className={styles.header}>
               <h1>Recursos</h1>
               <Link to="/content/resource">
-                <Button type="button" icon={MdAdd}>
+                <Button
+                  type="button"
+                  size="large"
+                  variant="contrast"
+                  icon={MdAdd}
+                >
                   Criar Recurso
                 </Button>
               </Link>
@@ -60,7 +65,8 @@ const resources: React.FC = () => {
             <div className={styles.tableWrapper}>
               <table>
                 <thead>
-                  <tr>
+                  <tr className={styles.tableHead}>
+                    <th>Id</th>
                     <th>Titulo</th>
                     <th>Descrição</th>
                     <th>Data de publicação</th>
@@ -72,6 +78,7 @@ const resources: React.FC = () => {
                 <tbody>
                   {contents.map(content => (
                     <tr>
+                      <td>{content.id_conteudo}</td>
                       <td>{content.titulo.substring(0, 20)}</td>
                       <td>{content.descricao.substring(0, 30)}</td>
                       <td>{content.data_publicacao}</td>
@@ -82,19 +89,7 @@ const resources: React.FC = () => {
                           to={`/post/${content.id_conteudo}`}
                           className={styles.action}
                         >
-                          <Button icon={MdLooks}>Visualizar</Button>
-                        </Link>
-                        <Link
-                          to={`/post/${content.id_conteudo}/edit`}
-                          className={styles.action}
-                        >
-                          <Button icon={MdLooks}>Visualizar</Button>
-                        </Link>
-                        <Link
-                          to={`/post/${content.id_conteudo}/edit`}
-                          className={styles.action}
-                        >
-                          <Button icon={MdLooks}>Visualizar</Button>
+                          <Button icon={MdRemoveRedEye}>Visualizar</Button>
                         </Link>
                         <Link
                           to={`/post/${content.id_conteudo}/edit`}

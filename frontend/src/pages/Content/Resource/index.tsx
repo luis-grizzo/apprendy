@@ -8,7 +8,9 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { MdSend } from 'react-icons/md';
 import { Editor } from '@tinymce/tinymce-react';
+import Select from 'react-select';
 
+import { TAGS } from 'interweave';
 import { displayErrors } from '../../../util/error';
 import api from '../../../services/api';
 
@@ -18,7 +20,7 @@ import Navbar from '../../../components/Navbar';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import InputFile from '../../../components/InputFile';
-import Select from '../../../components/Select';
+import CustomSelect from '../../../components/Select';
 import Footer from '../../../components/Footer';
 
 import styles from '../Content.module.sass';
@@ -52,7 +54,7 @@ interface EditorContent {
 const resource: React.FC = () => {
   const [tags, setTags] = useState<selectOptions[]>([]);
   const [ferramentas, setFerramentas] = useState<selectOptions[]>([]);
-  const [conteudo, setConteudo] = useState<any>('');
+  const [conteudo, setConteudo] = useState<any>();
 
   const formRef: any = useRef<FormHandles>(null);
 
@@ -81,7 +83,9 @@ const resource: React.FC = () => {
       // Remove all previous errors
       formRef.current.setErrors({});
 
-      console.log(conteudo.level.bookmark.content);
+      console.log(data.tags);
+
+      console.log(conteudo.level.content);
 
       const schema = Yup.object().shape({
         titulo: Yup.string()
@@ -105,8 +109,8 @@ const resource: React.FC = () => {
       const response = await api.post('/uploads', formData);
 
       data.imagem = response.data.url;
-      data.conteudo = conteudo;
-      data.tag = [1, 2, 3];
+      data.conteudo = conteudo.level.content;
+      data.tags = [1, 2, 3];
       data.ativo = true;
 
       await api.post('/conteudos', data);
@@ -115,6 +119,7 @@ const resource: React.FC = () => {
       formRef.current.reset();
     } catch (err) {
       displayErrors(err, formRef);
+      console.log(err);
       toast.error('❌ Erro ao cadastrar o Recurso!');
     }
   };
@@ -127,10 +132,10 @@ const resource: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1>Recurso</h1>
+              <h1 className={styles.title}>Recurso</h1>
               <Button
                 type="button"
-                size="large"
+                variant="contrast"
                 icon={MdSend}
                 onClick={() => formRef.current.submitForm()}
               >
@@ -145,22 +150,29 @@ const resource: React.FC = () => {
                 className={styles.input}
                 containerClass={`${styles.fullLine} ${styles.noMar}`}
               />
-              <Select
+              <Select options={tags} isMulti />
+              {/* <Select
                 name="tags[]"
                 label="Tags"
                 multiple
                 options={tags}
+                className={styles.selectMult}
+                selectWrapperClass={styles.selectMult}
+                containerClass={styles.noMar}
+              /> */}
+              <InputFile
+                name="imagem"
+                label="Imagem"
                 className={styles.input}
-                selectWrapperClass={styles.input}
                 containerClass={styles.noMar}
               />
-              <Select
+              <CustomSelect
                 name="id_ferramenta"
                 label="Ferramenta"
                 options={ferramentas}
                 className={styles.input}
                 selectWrapperClass={styles.input}
-                containerClass={styles.noMar}
+                containerClass={`${styles.fullLine} ${styles.noMar}`}
               />
               <Input
                 name="descricao"
@@ -169,30 +181,27 @@ const resource: React.FC = () => {
                 className={styles.input}
                 containerClass={`${styles.fullLine} ${styles.noMar}`}
               />
-              <InputFile
-                name="imagem"
-                label="Imagem"
-                className={styles.input}
-                containerClass={`${styles.fullLine} ${styles.noMar}`}
-              />
-              <Editor
-                initialValue="<p>Initial content</p>"
-                init={{
-                  height: 500,
-                  menubar: false,
-                  plugins: [
-                    'advlist autolink lists link image',
-                    'charmap print preview anchor help',
-                    'searchreplace visualblocks code',
-                    'insertdatetime media table paste wordcount',
-                  ],
-                  toolbar:
-                    'undo redo | formatselect | bold italic | \
+              <div className={styles.editorContainer}>
+                <Editor
+                  initialValue="<h1>Titulo</h1><p>Seu conteúdo vai aqui!</p><h2>Sub-titulo</h2><p>Mais conteúdo aqui!</p>"
+                  init={{
+                    height: 500,
+                    width: '100%',
+                    menubar: false,
+                    plugins: [
+                      'advlist autolink lists link image',
+                      'charmap print preview anchor help',
+                      'searchreplace visualblocks code',
+                      'insertdatetime media table paste wordcount',
+                    ],
+                    toolbar:
+                      'undo redo | formatselect | bold italic image | \
                     alignleft aligncenter alignright | \
                     bullist numlist outdent indent | help',
-                }}
-                onChange={content => setConteudo(content)}
-              />
+                  }}
+                  onChange={content => setConteudo(content)}
+                />
+              </div>
             </Form>
           </div>
         </section>

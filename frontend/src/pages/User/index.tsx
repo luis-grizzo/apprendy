@@ -32,7 +32,6 @@ import styles from './User.module.sass';
 
 import noUserImage from '../../assets/noUserImage.jpg';
 import testImage from '../../assets/defaultBackground.png';
-import user from '../Content/User';
 
 interface Params {
   id: string;
@@ -231,6 +230,10 @@ const User: React.FC = () => {
                   className={styles.img}
                 />
               </div>
+              {
+                console.log(params)
+                // userData.user.id_usuario ===
+              }
               <Button
                 type="button"
                 icon={MdEdit}
