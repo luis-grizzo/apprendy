@@ -1,10 +1,7 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState, useEffect } from 'react';
-import { MdAdd, MdEdit } from 'react-icons/md';
+import React from 'react';
+import { MdAdd } from 'react-icons/md';
+
 import { Link } from 'react-router-dom';
-
-import api from '../../../services/api';
-
 import Menu from '../Menu';
 
 import Navbar from '../../../components/Navbar';
@@ -13,20 +10,7 @@ import Footer from '../../../components/Footer';
 
 import styles from '../Admin.module.sass';
 
-interface Tag {
-  id_tag: number;
-  descritivo: string;
-}
-
 const tags: React.FC = () => {
-  const [tagsContent, setTagsContent] = useState<Tag[]>([]);
-
-  useEffect(() => {
-    api.get<Tag[]>('/tags?limit=1000000').then(response => {
-      setTagsContent(response.data);
-    });
-  }, []);
-
   return (
     <>
       <Navbar logged admin />
@@ -37,42 +21,13 @@ const tags: React.FC = () => {
             <div className={styles.header}>
               <h1>Tags</h1>
               <Link to="/content/tag">
-                <Button
-                  type="button"
-                  size="large"
-                  variant="contrast"
-                  icon={MdAdd}
-                >
+                <Button type="button" icon={MdAdd}>
                   Criar Tag
                 </Button>
               </Link>
             </div>
-            <div className={styles.tableWrapper}>
-              <table>
-                <thead>
-                  <tr className={styles.tableHead}>
-                    <th>Id</th>
-                    <th>Descrição</th>
-                    <th>Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tagsContent.map(tag => (
-                    <tr>
-                      <td>{tag.id_tag}</td>
-                      <td>{tag.descritivo}</td>
-                      <td className={styles.actionsTd}>
-                        <Link
-                          to={`/post/${tag.id_tag}/edit`}
-                          className={styles.action}
-                        >
-                          <Button icon={MdEdit}>Editar</Button>
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="comment">
+              Aqui será inserido a tabela com as informações desta parte
             </div>
           </div>
         </section>

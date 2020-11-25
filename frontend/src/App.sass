@@ -26,7 +26,7 @@ $textSize: 16px
 $textSizeSmall: 14px
 $textSizeSamaller: 12px
 
-body, input, select, textarea, button
+body, input, textarea, button
   font-size: $textSize
   font-family: $textFont
   -webkit-font-smoothing: antialiased
@@ -55,7 +55,10 @@ h6, .h6
   font-size: 24px
 
 // COLORS
-$primary: #8E24AA
+$primary: #BA68C8
+$primaryD1: #AB47BC
+$primaryD2: #9C27B0
+$primaryD3: #8E24AA
 $contrast: #00BFA5
 $success: #43A047
 $error: #E53935
@@ -126,18 +129,17 @@ $fastOutSlowInTransition: all .6s cubic-bezier(0.4, 0, 0.2, 1)
   display: grid
   grid-template-columns: 1fr
   grid-gap: 30px
-  // grid-auto-rows: 1fr
-  // grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))
+  grid-auto-rows: 1fr
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))
 
-  @media only screen and (min-width: 601px)
-   grid-template-columns: repeat(2, minmax(250px, 1fr))
+  // @media only screen and (min-width: 601px)
+   // grid-template-columns: repeat(2, 1fr)
 
-  @media only screen and (min-width: 993px)
-    grid-template-columns: repeat(3, minmax(250px, 1fr))
+  // @media only screen and (min-width: 993px)
+    // grid-template-columns: repeat(3, 1fr)
 
-  @media only screen and (min-width: 1280px)
-    grid-template-columns: repeat(4, minmax(250px, 1fr))
-  //  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))
+  // @media only screen and (min-width: 1280px)
+   // grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))
 
 .gridSpaceBottom
   margin-bottom: 80px

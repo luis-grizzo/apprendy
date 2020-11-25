@@ -1,11 +1,9 @@
 import React, {
   InputHTMLAttributes,
-  MouseEventHandler,
   OptionHTMLAttributes,
   useEffect,
   useRef,
 } from 'react';
-import { MdError } from 'react-icons/md';
 import { IconBaseProps } from 'react-icons/lib';
 import { useField } from '@unform/core';
 
@@ -24,10 +22,8 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   selectOptions?: Array<OptionHTMLAttributes<HTMLOptionElement>>;
   selectClass?: string;
   button?: boolean;
-  buttonType?: 'button' | 'submit' | 'reset' | undefined;
   buttonClass?: string;
   buttonIcon?: React.ComponentType<IconBaseProps>;
-  buttonOnCLick?: MouseEventHandler;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -40,22 +36,23 @@ const Input: React.FC<InputProps> = ({
   selectOptions,
   selectClass,
   button,
-  buttonType,
   buttonClass,
   buttonIcon: ButtonIcon,
-  buttonOnCLick,
   ...rest
 }) => {
   const inputRef = useRef(null);
-  const { fieldName, defaultValue, error, registerField } = useField(name);
+  const selectRef = useRef('');
 
+  const { fieldName, defaultValue, error, registerField } = useField(name);
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: inputRef.current,
+      ref: select
+        ? inputRef.current
+        : { value: inputRef.current, type: selectRef.current },
       path: 'value',
     });
-  }, [fieldName, registerField]);
+  }, [fieldName, registerField, select]);
 
   return (
     <div className={`${styles.inputContainer} ${containerClass}`}>
@@ -69,34 +66,24 @@ const Input: React.FC<InputProps> = ({
           id={name}
           name={name}
           ref={inputRef}
-          value={defaultValue}
-          className={`${styles.input} ${className}  ${error && styles.error}`}
+          className={`${styles.input} ${className}`}
           {...rest}
         />
         {select && (
           <Select
-            name={name}
             selectWrapperClass={styles.selectField}
             className={`${styles.select} ${selectClass}`}
             options={selectOptions}
+            name="type"
+            ref={selectRef}
           />
         )}
         {button && (
-          <Button
-            type={buttonType}
-            className={`${styles.button} ${buttonClass}`}
-            onClick={buttonOnCLick}
-          >
+          <Button type="submit" className={`${styles.button} ${buttonClass}`}>
             {ButtonIcon && <ButtonIcon className={styles.buttonIcon} />}
           </Button>
         )}
       </div>
-      {error && (
-        <div className={styles.errorMessage}>
-          <MdError className={styles.icon} />
-          <p className={styles.text}>{error}</p>
-        </div>
-      )}
     </div>
   );
 };

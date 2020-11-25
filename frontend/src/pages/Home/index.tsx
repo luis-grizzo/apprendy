@@ -12,9 +12,10 @@ import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
 
 import styles from './Home.module.sass';
-import homeHeader from '../../assets/home.jpg';
+import homeHeader from '../../assets/testImage2.jpg';
 
 import api from '../../services/api';
+import { getToken } from '../../auth/token';
 
 interface PostProperties {
   publicacao: {
@@ -62,7 +63,7 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Navbar logged />
+      <Navbar logged={!!getToken()} />
       <header>
         <Parallax
           bgImage={homeHeader}
@@ -109,7 +110,7 @@ const Home: React.FC = () => {
       </section>
       <section className="section container">
         <h2 className={styles.title}>Ultimos posts</h2>
-        <div className={styles.gridAuto}>
+        <div className="gridAuto">
           {posts.map(post => (
             <Card
               key={post.publicacao.id_conteudo}

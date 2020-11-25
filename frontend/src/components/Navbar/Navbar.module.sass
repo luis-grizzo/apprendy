@@ -3,7 +3,7 @@
 .navbar
   position: sticky
   top: 0
-  z-index: 999
+  z-index: 99
   background-color: $light
   box-shadow: 0 0 60px rgba(0,0,0,.12)
 
@@ -11,7 +11,7 @@
     display: flex
     align-items: center
     justify-content: space-between
-    height: 70px
+    padding: 10px 0
 
     .logoWrapper
       height: 50px
@@ -31,20 +31,11 @@
       align-items: center
       justify-content: flex-end
 
-      .linkButton
-        margin-left: 10px
-
       .link
-        display: flex
-        align-items: center
-        color: $dark
-        height: 70px
-        padding: 0 10px
-        will-change: background-color
-        transition: $defaultTransition
+        margin-right: 10px
 
-        &:hover
-          background-color: $greyL3
+        &:last-of-type
+          margin-right: 0
 
       .form
         display: flex

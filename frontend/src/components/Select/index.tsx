@@ -17,6 +17,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   containerClass?: string;
   selectWrapperClass?: string;
   className?: string;
+  ref: any;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -27,6 +28,7 @@ const Select: React.FC<SelectProps> = ({
   containerClass,
   selectWrapperClass,
   className,
+  ref,
   ...rest
 }) => {
   const selectRef = useRef(null);

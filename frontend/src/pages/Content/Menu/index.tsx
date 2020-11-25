@@ -61,7 +61,7 @@ const Menu: React.FC = () => {
           <Link
             to="/content/category"
             className={`${styles.link} ${
-              /content?\/category/.test(location.pathname) && styles.active
+              /content?\/categorie/.test(location.pathname) && styles.active
             }`}
           >
             <MdList className={styles.icon} />

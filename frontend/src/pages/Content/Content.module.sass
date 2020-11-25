@@ -5,7 +5,6 @@
   grid-gap: 0
 
 .sidebar
-  align-self: flex-start
   position: sticky
   top: 70px
   background-color: $light
@@ -20,7 +19,7 @@
   .divider
     height: 1px
     width: 100%
-    background-color: $greyL3
+    background-color: $greyL2
 
   .link
     display: flex
@@ -34,50 +33,35 @@
     padding: 0 30px
 
     &:hover, &.active
-      background-color: $greyL3
+      background-color: $greyL2
 
     .icon
       font-size: $textSizeBig
       margin-right: 10px
 
-.section
-  padding-top: 0
-
 .header
-  position: sticky
-  top: 70px
   display: flex
   align-items: center
   justify-content: space-between
-  margin-bottom: 30px
-  padding-top: 32px
-  padding-bottom: 20px
-  z-index: 99
-  background-color: $greyL3
-  border-bottom: 3px solid $greyL2
+  margin-bottom: 50px
 
+.content
   .title
-    font-size: $headingSize4
+    font-size: $headingSize2
 
-.form
-  display: grid
-  grid-template-columns: repeat(2, 1fr)
-  grid-template-rows: repeat(autofit, auto)
-  grid-gap: 30px
+  .form
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    grid-template-rows: repeat(3, 1fr)
+    grid-gap: 30px
 
-  .fullLine, .editorContainer
-    grid-column-start: 1
-    grid-column-end: 3
+    .fullLine
+      grid-column-start: 1
+      grid-column-end: 3
 
-  .selectField
-    background-color: $light
+    .selectField
+      background-color: $light
 
-  .input, .select
-    height: 60px
-    background-color: $light
-
-  .selectMult
-    height: 100%
-    background-color: $light
-    padding: 10px
-    text-transform: capitalize
+    .input, .select
+      height: 60px
+      background-color: $light

@@ -7,7 +7,6 @@
 .sidebar
   position: sticky
   top: 70px
-  align-self: flex-start
   background-color: $light
   height: calc(100vh - 70px)
   padding: 30px 0
@@ -20,7 +19,7 @@
   .divider
     height: 1px
     width: 100%
-    background-color: $greyL3
+    background-color: $greyL2
 
   .link
     display: flex
@@ -34,75 +33,14 @@
     padding: 0 30px
 
     &:hover, &.active
-      background-color: $greyL3
+      background-color: $greyL2
 
     .icon
       font-size: $textSizeBig
       margin-right: 10px
 
-.section
-  padding-top: 0
-
 .header
-  position: sticky
-  top: 70px
   display: flex
   align-items: center
   justify-content: space-between
-  margin-bottom: 30px
-  padding-top: 32px
-  padding-bottom: 20px
-  z-index: 99
-  background-color: $greyL3
-  border-bottom: 3px solid $greyL2
-
-.tableWrapper
-  display: block
-  width: 100%
-  overflow-x: auto
-
-  table
-    width: 100%
-    margin-bottom: 1rem
-    border-collapse: collapse
-    border-spacing: 0
-    text-align: center
-
-    tr
-      border-bottom: 3px solid $greyL2
-
-    .tableHead
-      position: sticky
-      top: 70px
-      border-bottom: none
-
-    th
-      padding: 2rem .75rem
-      font-size: 16px
-      background: $greyL2
-      vertical-align: inherit
-      font-weight: 700
-      text-transform: uppercase
-
-      &:first-of-type
-        border-top-left-radius: 10px
-
-      &:last-of-type
-        border-top-right-radius: 10px
-
-    td
-      font-size: 15px
-      padding: .75rem
-      vertical-align: middle
-      min-width: 124px
-
-      &.actionsTd
-        display: flex
-        align-items: center
-        justify-content: center
-
-        .action
-          margin-right: 5px
-
-          &:last-of-type
-            margin: 0
+  margin-bottom: 50px

@@ -121,7 +121,7 @@ const Cadastro: React.FC = () => {
           </CardPanel>
           <p className={styles.downText}>
             Já tem uma conta?
-            <Link className={`primaryText ${styles.link}`} to="/login">
+            <Link className={`primaryD3Text ${styles.link}`} to="/login">
               Fazer login!
             </Link>
           </p>

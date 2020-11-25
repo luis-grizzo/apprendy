@@ -6,14 +6,12 @@ import styles from './Button.module.sass';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: React.ComponentType<IconBaseProps>;
   variant?: 'contrast' | 'outline';
-  size?: 'large';
   className?: string;
   iconClass?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
   variant,
-  size,
   className,
   iconClass,
   children,
@@ -24,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       className={`${variant === 'contrast' ? styles.contrast : ''} ${
         variant === 'outline' ? styles.outline : ''
-      } ${size === 'large' ? styles.large : ''} ${styles.button} ${className}`}
+      } ${styles.button} ${className}`}
       type="button"
       {...rest}
     >

@@ -3,14 +3,12 @@ import React, { useState, useCallback, InputHTMLAttributes } from 'react';
 import styles from './Switch.module.sass';
 
 interface ISwtichProps extends InputHTMLAttributes<HTMLInputElement> {
-  name: string;
   label: string;
   isChecked?: boolean;
   className?: string;
 }
 
 const Switch: React.FC<ISwtichProps> = ({
-  name,
   label,
   isChecked,
   className,
@@ -25,15 +23,14 @@ const Switch: React.FC<ISwtichProps> = ({
   return (
     <div className={styles.wrapper}>
       <input
-        id={name}
-        name={name}
+        name="switch"
         className={`${styles.switch} ${className}`}
         type="checkbox"
         defaultChecked={checked}
         onClick={handleCheck}
         {...rest}
       />
-      <label htmlFor={name} className={styles.label}>
+      <label htmlFor="switch" className={styles.label}>
         {label}
       </label>
     </div>

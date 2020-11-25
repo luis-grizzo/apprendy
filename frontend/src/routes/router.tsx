@@ -30,11 +30,10 @@ const Routes: React.FC = () => (
 
       <Route path="/login" exact component={Login} />
       <Route path="/cadastro" component={Cadastro} />
-      <PrivateRoute path="/" exact component={Home} />
-      <PrivateRoute path="/post/:id" component={Post} />
-      <PrivateRoute path="/user/:id" component={User} />
-      <PrivateRoute path="/search" component={Search} />
-      {/* <PrivateRoute path="/search/content/:id" component={Search} /> */}
+      <Route path="/" exact component={Home} />
+      <Route path="/post/:id" component={Post} />
+      <Route path="/user/:id" component={User} />
+      <Route path="/search" component={Search} />
       <PrivateRoute path="/content/resource" component={ContentResource} />
       <PrivateRoute path="/content/tag" component={ContentTag} />
       <PrivateRoute path="/content/tool" component={ContentTool} />
