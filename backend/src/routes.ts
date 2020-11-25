@@ -6,7 +6,6 @@ import UsersDashboard from './controllers/UserController/UsersDashboard'
 import TipoUsersController from './controllers/UserController/TipoUsersController'
 import NotificationController from './controllers/UserController/NotificationController'
 import GetAnswerSecurity from './controllers/UserController/GetAnswerSecurity'
-import UploadController from './controllers/UploadController'
 
 import CategoriaController from './controllers/PublicationController/CategoriaController'
 import TagsController from './controllers/PublicationController/TagsController'
@@ -17,22 +16,11 @@ import LikesController from './controllers/PublicationController/LikesController
 
 import TopicoController from './controllers/CommunityController/TopicoController'
 import RespostaController from './controllers/CommunityController/RespostaController'
+import VotoController from './controllers/CommunityController/VotoController'
 
 import Authorizations from './auth/Authorizations'
 
-// Multer
-import multer from 'multer'
-import multerConfig from './configs/multer'
-
 const routes = Router()
-
-const upload = multer(multerConfig)
-
-routes.post(
-  '/uploads',
-  upload.single('upload'),
-  UploadController.store
-);
 
 routes.post('/signup', SessionController.signup)
 routes.post('/signin', SessionController.signin)
@@ -76,15 +64,20 @@ routes.post('/comentarios/:id_conteudo', Authorizations.show, ComentariosControl
 routes.put('/comentarios/:id_comentario', Authorizations.show, ComentariosController.update)
 routes.delete('/comentarios/:id_comentario', Authorizations.show, ComentariosController.delete)
 
+routes.get('/conteudos/likes/:id_conteudo', Authorizations.show, LikesController.show)
 routes.post('/conteudos/likes/:id_conteudo',  Authorizations.show, LikesController.store)
 routes.delete('/conteudos/likes/:id_conteudo', Authorizations.show, LikesController.delete)
 
+routes.get('/comunidade/topico/:id_topico_comunidade', TopicoController.show)
 routes.get('/comunidade/topico', TopicoController.index)
 routes.post('/comunidade/topico', Authorizations.show, TopicoController.store)
 routes.put('/comunidade/topico/:id_topico_comunidade', Authorizations.show, TopicoController.update)
 
-routes.get('/comunidade/resposta/:id_topico_comunidade', RespostaController.index)
+routes.get('/comunidade/resposta/:id_topico_comunidade', Authorizations.show, RespostaController.index)
 routes.post('/comunidade/resposta/:id_topico_comunidade', Authorizations.show, RespostaController.store)
-routes.put('/comunidade/resposta/:id_topico_comunidade', Authorizations.show, RespostaController.update)
+routes.put('/comunidade/resposta/:id_resposta_topico', Authorizations.show, RespostaController.update)
+
+routes.post('/comunidade/votos/:id_resposta', Authorizations.show, VotoController.store)
+routes.delete('/comunidade/votos/:id_resposta', Authorizations.show, VotoController.delete)
 
 export default routes

@@ -54,6 +54,10 @@ class SimpleCRUD {
   public Delete = async (where: object) => {
     await knex(this.table).where(where).first().delete()
   }
+
+  public Search = async (column: string, value: string) => {
+    return await knex(this.table).where(column, 'like', `%${value}%`)
+  }
 }
 
 export default SimpleCRUD

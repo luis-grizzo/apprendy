@@ -7,7 +7,7 @@ import TagsModel from '../../models/PublicationModel/TagsModel'
 
 import FormatDate from '../../utils/FormatDate'
 import nowDateUTC from '../../utils/nowDateUTC'
-import { ta } from 'date-fns/locale'
+import { Search } from '../../models/Search'
 
 class ConteudosController {
   private _userModel = new UserModel()
@@ -30,13 +30,26 @@ class ConteudosController {
   }
 
   public index = async (req: Request, res: Response) => {
-    const { pages, order, tags, onlyActive } = req.query
+    const { pages, order, type, value, onlyActive } = req.query
     
-    const tagString = String(tags)
-    const tagsArray = tagString !== 'undefined' ? tagString.split(",") : []
+    const search = new Search(String(type), String(value))
+    
+    if(type && !search.typeIsValid()) {
+      return res.status(400).json({ error: "Bad request" })
+    }
 
     // return publication and tags
-    let conteudos = await this._conteudoModel.indexConteudo(Number(pages), String(order), tagsArray, this.onlyActive(String(onlyActive)))
+    let conteudos = await this._conteudoModel.indexConteudo(Number(pages), String(order), search, this.onlyActive(String(onlyActive)))
+
+    if(search.type === 'tags') {
+      conteudos = conteudos.filter(conteudo => {
+        const tags = conteudo.tag.filter((tag) => {
+          return tag.descritivo.includes(search.value)
+        })
+       
+        return tags.length > 0
+      })
+    }
 
     conteudos = conteudos.map(conteudo => {
       conteudo.publicacao.data_publicacao = FormatDate(conteudo.publicacao.data_publicacao)
@@ -130,7 +143,7 @@ class ConteudosController {
   }
 
   private onlyActive = (active: string): boolean => {
-    return active === 'true'
+    return active === 'true' 
   }
 
   private addTags = async (id_conteudo: number, tags: Array<number>) => {

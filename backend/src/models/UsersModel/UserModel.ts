@@ -24,7 +24,7 @@ class UserModel extends SimpleCRUD {
     
     let likes = await this._contents.getUserPublicationsLiked(id_usuario)
     let contents = await this._contents.getUserPublications(id_usuario)
-    
+
     likes = likes.map(conteudo => {
       conteudo.publicacao.data_publicacao = FormatDate(conteudo.publicacao.data_publicacao)
       

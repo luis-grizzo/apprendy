@@ -3,13 +3,14 @@ import knex from "../../database/connection";
 
 import SimpleCRUD from "../SimpleCRUD";
 import { QueryBuilder } from "knex";
+import { Search } from "../Search";
 
 class ConteudoModel extends SimpleCRUD {
   constructor() {
     super("conteudos");
   }
 
-  private _tags: Array<string> = [];
+  public search: Search;
 
   public showPublication = async (id_conteudo: number) => {
     const getConteudo = await knex("conteudos")
@@ -49,17 +50,17 @@ class ConteudoModel extends SimpleCRUD {
     const contents = await knex("conteudos")
       .innerJoin(
         "likes_conteudo",
-        "likes_conteudo.id_usuario",
-        "conteudos.id_usuario"
+        "likes_conteudo.id_conteudo",
+        "conteudos.id_conteudo"
       )
       .where({
-        "conteudos.id_usuario": id_usuario,
+        "likes_conteudo.id_usuario": id_usuario,
         "conteudos.ativo": true,
       })
       .select(this.selectContent());
 
     const conteudo = await this.tagsConteudos(contents);
-
+    
     return conteudo;
   };
 
@@ -91,10 +92,9 @@ class ConteudoModel extends SimpleCRUD {
     return conteudo;
   };
 
-  public indexConteudo = async (pages: number, order: string, tags: Array<string>, onlyActive?: boolean) => {
-    
-    this._tags = tags
-    
+  public indexConteudo = async (pages: number, order: string, search: Search ,onlyActive?: boolean) => {
+    this.search = search
+
     if (!pages) {
       pages = 1;
     }
@@ -111,17 +111,19 @@ class ConteudoModel extends SimpleCRUD {
         "ferramentas.id_ferramenta",
         "conteudos.id_ferramenta"
       )
+      .innerJoin('categorias', 'categorias.id_categoria', 'ferramentas.id_categoria')
       .leftJoin(
         "likes_conteudo",
         "likes_conteudo.id_conteudo",
         "conteudos.id_conteudo"
       )
       .where(this.onlyActive(onlyActive))
-      .modify(this.whereTags)
+      .modify(this.searchLike)
       .select(this.selectContent())
       .select([
         "usuarios.nome as usuario_nome",
         "ferramentas.descritivo as ferramenta_descritivo",
+        "categorias.descritivo as categoria",
       ])
       .count("likes_conteudo.id_conteudo as likes")
       .groupBy("conteudos.id_conteudo")
@@ -134,13 +136,20 @@ class ConteudoModel extends SimpleCRUD {
     return conteudo;
   };
 
-  private whereTags = (table: QueryBuilder) => {
-    console.log(this._tags)
-    if(this._tags.length > 0){
-      return table.whereIn('tags_conteudos.id_tag', this._tags)
+  private searchLike = (table: QueryBuilder) => {
+    if(!this.search.typeIsValid() || this.search.type === 'tags') return;
+
+    return table.where(this.getColumnByType(), "like", `%${this.search.value}%`)
+  }
+
+  private getColumnByType = (): string => {
+    const types = {
+      "recursos": 'conteudos.titulo', 
+      "ferramentas": 'ferramentas.descritivo', 
+      "categorias": "categorias.descritivo"
     }
 
-    return;
+    return types[this.search.type]
   }
 
   private onlyActive = (active: boolean) => {

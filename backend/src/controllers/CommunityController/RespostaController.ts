@@ -59,15 +59,11 @@ class TopicoController {
 
   public update = async (req: Request, res: Response) => {
     let { userId } = req.userSession
-    const { id_topico_comunidade } = req.params
+    const { id_resposta_topico } = req.params
     let { conteudo } = req.body
-    
-    const existsTopico = await this._topicoModel.existsTopico(Number(id_topico_comunidade))
-
-    if(!existsTopico) return res.status(404).json({ error: 'Topic not Found' })
 
     const where = {
-      id_topico_comunidade: Number(id_topico_comunidade),
+      id_resposta_topico: Number(id_resposta_topico),
       id_usuario: userId
     }
 
@@ -83,7 +79,7 @@ class TopicoController {
   private factoryContent(id_usuario: number, conteudo: string, id_topico_comunidade: number) {
     const data_publicacao = nowDateUTC()
     
-    return { id_usuario, conteudo, id_topico_comunidade, data_publicacao }
+    return { id_usuario, conteudo, id_topico_comunidade, data_publicacao, votos: 0 }
   }
 }
 

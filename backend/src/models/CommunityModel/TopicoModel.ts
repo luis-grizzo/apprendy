@@ -31,6 +31,19 @@ class TopicoModel extends SimpleCRUD {
     return id[0]
   }
 
+  public showTopico = async (id_topico_comunidade: number) => {
+    const topico = await knex("topicos_comunidade")
+      .innerJoin('usuarios', 'usuarios.id_usuario', 'topicos_comunidade.id_usuario')
+      .select([
+        "topicos_comunidade.*",
+        "usuarios.nome as usuarios_nome"
+      ])
+      .where({ id_topico_comunidade })
+      .first()
+      
+    return topico
+  }
+
   public indexTopico = async (pages: number, order: string) => {
     if(!pages) { pages = 1 }
     if(!order) { order = 'asc' }
@@ -43,12 +56,13 @@ class TopicoModel extends SimpleCRUD {
         "usuarios.nome as usuarios_nome"
       ])
       .count('respostas_topico.id_topico_comunidade as respostas')
+      .sum('respostas_topico.votos as votos')
       .groupBy('topicos_comunidade.id_topico_comunidade')
       .orderBy('topicos_comunidade.data_publicacao', order)
       .limit(10)
       .offset((pages - 1) * 10)
 
-    return topicos
+      return topicos
   }
 
   public updateTopico = async (data: object, where: object) => {

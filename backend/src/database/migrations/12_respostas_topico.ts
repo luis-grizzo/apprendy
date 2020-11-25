@@ -5,6 +5,7 @@ export async function up (knex: Knex) {
     table.increments('id_resposta_topico').primary()
     table.text('conteudo', 'longtext').notNullable()
     table.string('data_publicacao').notNullable()
+    table.integer('votos');
 
     table.integer('id_usuario')
       .unsigned().notNullable()

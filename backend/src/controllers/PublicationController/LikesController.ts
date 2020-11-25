@@ -12,6 +12,19 @@ class LikesController {
   private _likeModel = new LikesModel()
   private _conteudoModel = new ConteudoModel()
 
+  public show = async(req: Request, res: Response) =>{
+    const { userId } = req.userSession
+    const { id_conteudo } = req.params
+
+    const userHasLikedPost = await this._likeModel.existsLike(Number(id_conteudo), userId)
+    
+    const data = {
+      HasLiked: !!userHasLikedPost
+    }
+
+    res.json(data)
+  }
+
   public store = async (req: Request, res: Response) => {
     let { userId } = req.userSession
     let { id_conteudo } = req.params

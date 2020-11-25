@@ -8,6 +8,18 @@ import nowDateUTC from '../../utils/nowDateUTC'
 class TopicoController {
   private _topicoModel = new TopicoModel()
 
+  public show = async (req: Request, res: Response) => {
+    const { id_topico_comunidade } = req.params
+
+    const topico = await this._topicoModel.showTopico(Number(id_topico_comunidade))
+
+    if(!topico) return res.status(404).json({ error: 'Topico não encontrado!'})
+
+    topico.data_publicacao = FormatDate(topico.data_publicacao)
+
+    return res.json(topico)
+  }
+
   public index = async (req: Request, res: Response) => {
     const { pages, order } = req.query
 
@@ -15,7 +27,8 @@ class TopicoController {
 
     topicos = topicos.map(topico => {
       topico.data_publicacao = FormatDate(topico.data_publicacao)
-      
+      topico.conteudo = undefined
+
       return topico
     })
 
