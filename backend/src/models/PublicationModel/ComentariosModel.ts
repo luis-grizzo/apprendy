@@ -10,6 +10,21 @@ class CommentariosModel extends SimpleCRUD {
 
     return comentario
   }
+  public indexTodosComentarios = async () => {
+    
+    const comentarios = await knex('comentarios')
+      .innerJoin('usuarios', 'usuarios.id_usuario', 'comentarios.id_usuario')
+      .innerJoin('conteudos', 'conteudos.id_conteudo', 'comentarios.id_conteudo')
+      .select([
+        'comentarios.*',
+        'usuarios.nome as usuario_nome',
+        'usuarios.foto_perfil as usuario_foto',
+      ])
+      .groupBy('comentarios.id_comentario')
+      .orderBy('comentarios.data_publicacao')
+      
+    return comentarios
+  }
 
   public indexComentarios = async (pages: number, order: string, id_conteudo: number) => {
     if(!pages) { pages = 1 }

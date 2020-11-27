@@ -385,8 +385,7 @@ const User: React.FC = () => {
             Favoritos de
             {` ${userData.user.nome}`}
           </h2>
-          {console.log(userData.likes === [])}
-          {userData.likes === [] ? (
+          {userData.likes.length > 0 ? (
             <div className="gridAuto">
               {userData.likes.map(post => (
                 <Card
@@ -402,8 +401,7 @@ const User: React.FC = () => {
             </div>
           ) : (
             <p className={styles.noResources}>
-              {/* eslint-disable-next-line no-useless-escape */}
-              {`${userData.user.nome} não tem posts favoritos ainda. 🤔`}
+              {`Parece que ${userData.user.nome} não tem posts favoritos ainda. 🤔😒`}
             </p>
           )}
         </section>
@@ -412,19 +410,25 @@ const User: React.FC = () => {
             Recursos de
             {` ${userData.user.nome}`}
           </h2>
-          <div className="gridAuto">
-            {userData.contents.map(post => (
-              <Card
-                key={post.publicacao.id_conteudo}
-                postId={post.publicacao.id_conteudo}
-                image={post.publicacao.imagem}
-                title={post.publicacao.titulo}
-                date={post.publicacao.data_publicacao}
-                description={post.publicacao.descricao}
-                // tags={post.tag}
-              />
-            ))}
-          </div>
+          {userData.contents.length > 0 ? (
+            <div className="gridAuto">
+              {userData.contents.map(post => (
+                <Card
+                  key={post.publicacao.id_conteudo}
+                  postId={post.publicacao.id_conteudo}
+                  image={post.publicacao.imagem}
+                  title={post.publicacao.titulo}
+                  date={post.publicacao.data_publicacao}
+                  description={post.publicacao.descricao}
+                  // tags={post.tag}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className={styles.noResources}>
+              {`Parece que ${userData.user.nome} não tem posts ainda. 😢😡`}
+            </p>
+          )}
           {/* <Pagination pageCount={30} /> */}
         </section>
       </main>

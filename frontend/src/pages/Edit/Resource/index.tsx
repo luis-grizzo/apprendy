@@ -118,10 +118,11 @@ const resource: React.FC = () => {
       });
 
       // data.tags = editConteudo?.tag.map(tag => tag.id_tag);
-      if (data.conteudo === undefined) {
+
+      data.conteudo = editConteudo?.conteudo.level.content;
+
+      if (data.conteudo === undefined || null || '') {
         data.conteudo = editConteudo?.conteudo;
-      } else {
-        data.conteudo = editConteudo?.conteudo.level.content;
       }
       data.ativo = editConteudo?.ativo;
 
@@ -197,7 +198,8 @@ const resource: React.FC = () => {
                     id_ferramenta: Number(editConteudo?.id_ferramenta),
                     imagem: String(editConteudo?.imagem),
                     ativo: Boolean(e.target.value),
-                  })}
+                  })
+                }
                 className={styles.input}
                 selectWrapperClass={styles.input}
                 containerClass={styles.noMar}
@@ -216,8 +218,7 @@ const resource: React.FC = () => {
                     id_ferramenta: Number(e.target.value),
                     imagem: String(editConteudo?.imagem),
                     ativo: Boolean(editConteudo?.ativo),
-                  })
-                }
+                  })}
                 className={styles.input}
                 selectWrapperClass={styles.input}
                 containerClass={styles.noMar}
@@ -258,7 +259,8 @@ const resource: React.FC = () => {
                       id_ferramenta: Number(editConteudo?.id_ferramenta),
                       imagem: String(editConteudo?.imagem),
                       ativo: Boolean(editConteudo?.ativo),
-                    })}
+                    })
+                  }
                   init={{
                     height: 500,
                     width: '100%',

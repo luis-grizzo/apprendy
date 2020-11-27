@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
 
+import { toast } from 'react-toastify';
 import api from '../../../services/api';
 
 import Menu from '../Menu';
@@ -15,6 +16,7 @@ import styles from '../Admin.module.sass';
 interface Comments {
   id_comentario: string;
   id_conteudo: number;
+  conteudo: string;
   usuario_nome: string;
   data_publicacao: string;
 }
@@ -22,11 +24,19 @@ interface Comments {
 const comments: React.FC = () => {
   const [commentsContent, setCommentsContent] = useState<Comments[]>([]);
 
-  // useEffect(() => {
-  //   api.get<Comments[]>('/ferramentas?limit=1000000').then(response => {
-  //     setToolsContent(response.data);
-  //   });
-  // }, []);
+  useEffect(() => {
+    api.get<Comments[]>('/comentarios/tudo').then(response => {
+      setCommentsContent(response.data);
+    });
+  }, []);
+
+  function handleResourceDelete(id: number): void {
+    if (window.confirm('Confirmar exclusão?')) {
+      api.delete(`/comentarios/${id}`);
+      toast.success('✅ Recurso excluido com sucesso!');
+      window.location.href = 'http://localhost:3000/admin/comments';
+    }
+  }
 
   return (
     <>
@@ -42,24 +52,29 @@ const comments: React.FC = () => {
               <table>
                 <thead>
                   <tr className={styles.tableHead}>
-                    <th>Id</th>
                     <th>Id recurso</th>
                     <th>Conteudo</th>
                     <th>Autor</th>
-                    <th>Data da publicação</th>
                     <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {commentsContent.map(comment => (
                     <tr>
-                      <td>{comment.id_comentario}</td>
                       <td>{comment.id_conteudo}</td>
+                      <td>{comment.conteudo}</td>
                       <td>{comment.usuario_nome}</td>
-                      <td>{comment.data_publicacao}</td>
                       <td>
                         <div className={styles.actions}>
-                          <Button icon={MdClose} variant="error">
+                          <Button
+                            icon={MdClose}
+                            variant="error"
+                            onClick={() =>
+                              handleResourceDelete(
+                                Number(comment.id_comentario),
+                              )
+                            }
+                          >
                             Excluir
                           </Button>
                         </div>

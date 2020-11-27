@@ -24,6 +24,8 @@ interface PostProperties {
     ativo: boolean;
     data_publicacao: string;
     descricao: string;
+    id_ferramenta: number;
+    ferramenta_descritivo: string;
   };
   tag: Array<{
     id_tag: number;
@@ -37,6 +39,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     api.get('/conteudos?onlyActive=true').then(response => {
       setPosts(response.data);
+      console.log(response.data);
     });
   }, []);
 
@@ -114,6 +117,10 @@ const Home: React.FC = () => {
               title={post.publicacao.titulo}
               date={post.publicacao.data_publicacao}
               description={post.publicacao.descricao}
+              ferramenta={{
+                icone: post.publicacao.imagem,
+                descritivo: post.publicacao.ferramenta_descritivo,
+              }}
               imageBg
             />
           ))}
@@ -130,6 +137,10 @@ const Home: React.FC = () => {
               title={post.publicacao.titulo}
               date={post.publicacao.data_publicacao}
               description={post.publicacao.descricao}
+              ferramenta={{
+                icone: post.publicacao.imagem,
+                descritivo: post.publicacao.ferramenta_descritivo,
+              }}
               // tags={post.tag}
             />
           ))}

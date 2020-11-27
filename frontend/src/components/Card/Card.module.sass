@@ -26,7 +26,7 @@
       min-height: 100%
       max-height: 120%
 
-    .tagsContainer
+    .upContainer
       position: absolute
       top: 0
       left: 0
@@ -38,6 +38,29 @@
       justify-content: flex-start
       flex-wrap: wrap
       background: linear-gradient(180deg, transparentize(#000, .5), transparent 90%)
+
+      .iconeWrapper
+        position: relative
+        display: flex
+        align-items: center
+        justify-content: center
+        height: 40px
+        width: 40px
+        overflow: hidden
+        border-radius: 50%
+
+        .img
+          min-width: 100%
+          max-width: 120%
+          min-height: 100%
+          max-height: 120%
+
+      .toolName
+        margin: 0
+        margin-left: 10px
+        font-weight: bold
+        color: $light
+        font-weight: 700
 
       .tag
         display: inline
@@ -93,7 +116,7 @@
       max-height: 120%
       width: auto
 
-    .tagsContainer
+    .upContainer
       position: relative
       width: 100%
       margin-bottom: 60px

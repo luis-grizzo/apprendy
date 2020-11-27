@@ -5,12 +5,18 @@ import { MdDateRange } from 'react-icons/md';
 
 import styles from './Card.module.sass';
 
+import testeImagem from '../../assets/noUserImage.jpg';
+
 interface ICardProps {
   postId: number;
   image: string;
   title: string;
   date: string;
   description: string;
+  ferramenta?: {
+    icone: string;
+    descritivo: string;
+  };
   // tags: Array<{
   //   id_tag: number;
   //   descritivo: string;
@@ -24,6 +30,7 @@ const Card: React.FC<ICardProps> = ({
   title,
   date,
   description,
+  ferramenta,
   // tags,
   imageBg,
 }) => {
@@ -33,7 +40,11 @@ const Card: React.FC<ICardProps> = ({
         {imageBg ? (
           <div className={styles.cardImage}>
             <img src={image} alt={title} />
-            <div className={styles.tagsContainer}>
+            <div className={styles.upContainer}>
+              <div className={styles.iconeWrapper}>
+                <img src={ferramenta?.icone} alt="" className={styles.img} />
+              </div>
+              <p className={styles.toolName}>{ferramenta?.descritivo}</p>
               {/* {tags.map(tag => (
                 <span key={tag.id_tag} className={styles.tag}>
                   {tag.descritivo}
@@ -53,7 +64,11 @@ const Card: React.FC<ICardProps> = ({
           <>
             <div className={styles.cardImage}>
               <img src={image} alt={title} />
-              <div className={styles.tagsContainer}>
+              <div className={styles.upContainer}>
+                <div className={styles.iconeWrapper}>
+                  <img src={ferramenta?.icone} alt="" className={styles.img} />
+                </div>
+                <p className={styles.toolName}>{ferramenta?.descritivo}</p>
                 {/* {tags.map(tag => (
                   <span key={tag.id_tag} className={styles.tag}>
                     {tag.descritivo}

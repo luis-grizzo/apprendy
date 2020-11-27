@@ -8,12 +8,14 @@ import TagsModel from '../../models/PublicationModel/TagsModel'
 import FormatDate from '../../utils/FormatDate'
 import nowDateUTC from '../../utils/nowDateUTC'
 import { ta } from 'date-fns/locale'
+import CommentariosModel from '../../models/PublicationModel/ComentariosModel'
 
 class ConteudosController {
   private _userModel = new UserModel()
   private _conteudoModel = new ConteudoModel()
   private _tagsConteudosModel = new TagsConteudosModel()
   private _tagsModel = new TagsModel()
+  private _comentariosModel = new CommentariosModel();
 
   public show = async (req: Request, res: Response) => {
     const { id_conteudo } = req.params
@@ -129,8 +131,14 @@ class ConteudosController {
 
     if(!existsConteudo) return res.status(404).json({ error: "Content not found"})
 
+    const where = {
+      
+      id_conteudo: Number(id_conteudo)
+    }
     try {
-      await this._tagsConteudosModel.deleteTagsConteudos(Number(id_conteudo))
+
+
+      await this._comentariosModel.deleteComentario(where)
       await this._conteudoModel.deleteConteudos(Number(id_conteudo))
 
       return res.send("")
@@ -138,7 +146,6 @@ class ConteudosController {
       return res.status(400).json({ error: e.message })
     }
   }
-
   private onlyActive = (active: string): boolean => {
     return active === 'true'
   }

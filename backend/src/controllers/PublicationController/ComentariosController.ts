@@ -18,7 +18,14 @@ class ComentariosController {
     const { id_conteudo } = req.params
     const { pages, order } = req.query
 
-    let comentarios = await this._comentariosModel.indexComentarios(Number(pages), String(order), Number(id_conteudo))
+    let comentarios;
+    console.log(id_conteudo);
+    if(Number(id_conteudo) > 0){
+       comentarios = await this._comentariosModel.indexComentarios(Number(pages), String(order), Number(id_conteudo))
+    }else{
+       comentarios = await this._comentariosModel.indexTodosComentarios()
+      
+    }  
 
     comentarios = comentarios.map(comentario => {
       comentario.data_publicacao = FormatDate(comentario.data_publicacao)
