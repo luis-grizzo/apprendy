@@ -23,6 +23,12 @@ class CategoriaModel extends SimpleCRUD {
     return categorias
   }
 
+  public indexCategoriaId = async (id_categoria: number) => {
+    const categorias = await this.ReadWithWhereFirst({ id_categoria })
+
+    return categorias
+  }
+
   public updateCategoria = async (id_categoria: number, descritivo: string) => {
     await this.Update({ descritivo: descritivo.trim() }, { id_categoria })
   }

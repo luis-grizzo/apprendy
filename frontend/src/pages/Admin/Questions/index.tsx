@@ -42,14 +42,9 @@ const questions: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1>Perguntas</h1>
+              <h1 className={styles.title}>Perguntas</h1>
               <Link to="/content/question">
-                <Button
-                  type="button"
-                  size="large"
-                  variant="contrast"
-                  icon={MdAdd}
-                >
+                <Button type="button" variant="contrast" icon={MdAdd}>
                   Criar Pergunta
                 </Button>
               </Link>

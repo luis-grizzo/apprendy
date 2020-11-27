@@ -69,7 +69,7 @@ const Input: React.FC<InputProps> = ({
           id={name}
           name={name}
           ref={inputRef}
-          value={defaultValue}
+          defaultValue={defaultValue}
           className={`${styles.input} ${className}  ${error && styles.error}`}
           {...rest}
         />

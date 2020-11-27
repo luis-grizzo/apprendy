@@ -9,13 +9,17 @@ class TagsController {
 
   public index = async (req: Request, res: Response) => {
     const { limit } = req.query
+    const { id_tag } = req.query
 
     if(!limit) return res.status(400).json({ error: 'limit not informed' })
     if(Number(limit) <= 0) return res.status(401).json({ error: 'limit is not valid' })
-    
-    const tags = await this._tagsModel.indexTags(Number(limit))
 
-    return res.json(tags)
+    let tag = []
+
+    if(Number(id_tag) > 0) tag = await this._tagsModel.indexTagId(Number(id_tag))
+    else tag = await this._tagsModel.indexTags(Number(limit))
+
+    return res.json(tag)
   }
 
   public store = async (req: Request, res: Response) => {

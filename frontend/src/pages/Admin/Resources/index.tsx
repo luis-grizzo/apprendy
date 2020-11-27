@@ -15,16 +15,18 @@ import styles from '../Admin.module.sass';
 
 interface Content {
   id_conteudo: number;
+  imagem: string;
   titulo: string;
   descricao: string;
   data_publicacao: string;
   usuario_nome: string;
   likes: number;
+  ativo: number;
 }
 
 interface ContentResponse {
   publicacao: Content;
-  tags: Tag[];
+  tag: Tag[];
 }
 
 interface Tag {
@@ -33,12 +35,11 @@ interface Tag {
 }
 
 const resources: React.FC = () => {
-  const [contents, setContents] = useState<Content[]>([]);
+  const [contents, setContents] = useState<ContentResponse[]>([]);
 
   useEffect(() => {
     api.get<ContentResponse[]>('/conteudos').then(response => {
-      const posts = response.data.map(content => content.publicacao);
-      setContents(posts);
+      setContents(response.data);
     });
   }, []);
 
@@ -50,14 +51,9 @@ const resources: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1>Recursos</h1>
+              <h1 className={styles.title}>Recursos</h1>
               <Link to="/content/resource">
-                <Button
-                  type="button"
-                  size="large"
-                  variant="contrast"
-                  icon={MdAdd}
-                >
+                <Button type="button" variant="contrast" icon={MdAdd}>
                   Criar Recurso
                 </Button>
               </Link>
@@ -66,37 +62,45 @@ const resources: React.FC = () => {
               <table>
                 <thead>
                   <tr className={styles.tableHead}>
-                    <th>Id</th>
                     <th>Titulo</th>
-                    <th>Descrição</th>
+                    <th>Tags</th>
                     <th>Data de publicação</th>
                     <th>Autor</th>
-                    <th>Favoritos</th>
+                    <th>Ativo</th>
                     <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {contents.map(content => (
                     <tr>
-                      <td>{content.id_conteudo}</td>
-                      <td>{content.titulo.substring(0, 20)}</td>
-                      <td>{content.descricao.substring(0, 30)}</td>
-                      <td>{content.data_publicacao}</td>
-                      <td>{content.usuario_nome}</td>
-                      <td>{content.likes}</td>
-                      <td className={styles.actionsTd}>
-                        <Link
-                          to={`/post/${content.id_conteudo}`}
-                          className={styles.action}
-                        >
-                          <Button icon={MdRemoveRedEye}>Visualizar</Button>
-                        </Link>
-                        <Link
-                          to={`/post/${content.id_conteudo}/edit`}
-                          className={styles.action}
-                        >
-                          <Button icon={MdEdit}>Editar</Button>
-                        </Link>
+                      <td>
+                        {`${content.publicacao.titulo.substring(0, 20)}...`}
+                      </td>
+                      <td>
+                        {content.tag.map(tag => (
+                          <span className={styles.tag}>{tag.descritivo}</span>
+                        ))}
+                      </td>
+                      <td>{content.publicacao.data_publicacao}</td>
+                      <td>{content.publicacao.usuario_nome}</td>
+                      <td>
+                        {content.publicacao.ativo === 1 ? 'Ativo' : 'Inativo'}
+                      </td>
+                      <td>
+                        <div className={styles.actions}>
+                          <Link
+                            to={`/post/${content.publicacao.id_conteudo}`}
+                            className={styles.action}
+                          >
+                            <Button icon={MdRemoveRedEye}>Visualizar</Button>
+                          </Link>
+                          <Link
+                            to={`/edit/resource/${content.publicacao.id_conteudo}`}
+                            className={styles.action}
+                          >
+                            <Button icon={MdEdit}>Editar</Button>
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))}

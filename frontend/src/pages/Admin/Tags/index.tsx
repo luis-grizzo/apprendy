@@ -35,14 +35,9 @@ const tags: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1>Tags</h1>
+              <h1 className={styles.title}>Tags</h1>
               <Link to="/content/tag">
-                <Button
-                  type="button"
-                  size="large"
-                  variant="contrast"
-                  icon={MdAdd}
-                >
+                <Button type="button" variant="contrast" icon={MdAdd}>
                   Criar Tag
                 </Button>
               </Link>
@@ -61,9 +56,10 @@ const tags: React.FC = () => {
                     <tr>
                       <td>{tag.id_tag}</td>
                       <td>{tag.descritivo}</td>
-                      <td className={styles.actionsTd}>
+                      <td>
+                        <div className={styles.actions} />
                         <Link
-                          to={`/post/${tag.id_tag}/edit`}
+                          to={`/edit/tag/${tag.id_tag}`}
                           className={styles.action}
                         >
                           <Button icon={MdEdit}>Editar</Button>

@@ -34,6 +34,29 @@ class ConteudoModel extends SimpleCRUD {
     return conteudo
   }
 
+  public showPublication2 = async (id_conteudo: number) => {
+    const getConteudo = await knex("conteudos")
+      .innerJoin("usuarios", "usuarios.id_usuario", "conteudos.id_usuario")
+      .leftJoin(
+        "likes_conteudo",
+        "likes_conteudo.id_conteudo",
+        "conteudos.id_conteudo"
+      )
+      .where({ 'conteudos.id_conteudo': id_conteudo })
+      .count("likes_conteudo.id_conteudo as likes")
+      .select('conteudos.*')
+      .select("usuarios.nome as usuario_nome")
+      .first()
+
+    if(!getConteudo.id_conteudo) return;
+
+    const conteudo = await this.getTags(getConteudo)
+
+    conteudo.publicacao.data_publicacao = FormatDate(conteudo.publicacao.data_publicacao)
+
+    return conteudo
+  }
+
   public getUserPublications = async (id_usuario: number) => {
     const contents = await this.ReadReturnSelectWithWhere(
       this.selectContent(),
@@ -122,11 +145,12 @@ class ConteudoModel extends SimpleCRUD {
       .select([
         "usuarios.nome as usuario_nome",
         "ferramentas.descritivo as ferramenta_descritivo",
+        "conteudos.ativo",
       ])
       .count("likes_conteudo.id_conteudo as likes")
       .groupBy("conteudos.id_conteudo")
       .orderBy("likes", order)
-      .limit(10)
+      .limit(200)
       .offset((pages - 1) * 10);
 
     const conteudo = await this.tagsConteudos(conteudos);

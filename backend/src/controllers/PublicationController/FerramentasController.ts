@@ -8,9 +8,14 @@ class FerramentasController {
   private _ferramentasModel = new FerramentasModel()
 
   public index = async (req: Request, res: Response) => {
-    const tags = await this._ferramentasModel.indexFerramentas()
+    const { id_ferramenta } = req.query
 
-    return res.json(tags)
+    let ferramenta = []
+
+    if(Number(id_ferramenta) > 0) ferramenta = await this._ferramentasModel.indexFerramentasId(Number(id_ferramenta))
+    else ferramenta = await this._ferramentasModel.indexFerramentas()
+
+    return res.json(ferramenta)
   }
 
   public store = async (req: Request, res: Response) => {

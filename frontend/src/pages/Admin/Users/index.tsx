@@ -38,13 +38,8 @@ const users: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1>Usuários</h1>
-              <Button
-                type="button"
-                icon={MdAdd}
-                size="large"
-                variant="contrast"
-              >
+              <h1 className={styles.title}>Usuários</h1>
+              <Button type="button" icon={MdAdd} variant="contrast">
                 Criar usuário
               </Button>
             </div>

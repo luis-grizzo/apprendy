@@ -29,6 +29,12 @@ class TagsModel extends SimpleCRUD {
     return tags
   }
 
+  public indexTagId = async (id_tag: number) => {
+    const tags = await this.ReadWithWhereFirst({id_tag})
+
+    return tags
+  }
+
   public updateTags = async (id_tag: number, descritivo: string) => {
     await this.Update({ descritivo: descritivo.trim() }, { id_tag })
   }

@@ -17,12 +17,21 @@ class ConteudosController {
 
   public show = async (req: Request, res: Response) => {
     const { id_conteudo } = req.params
+    const { onlyActive } = req.query
+    let conteudo = null
+
+    console.log(onlyActive);
 
     if(isNaN(Number(id_conteudo))) {
       return res.status(400).json({ error: 'Bad Request' })
     }
 
-    const conteudo = await this._conteudoModel.showPublication(Number(id_conteudo))
+    if(onlyActive === 'false') {
+      conteudo = await this._conteudoModel.showPublication2(Number(id_conteudo))
+    } else {
+      conteudo = await this._conteudoModel.showPublication(Number(id_conteudo))
+    }
+
 
     if(!conteudo) return res.status(404).json({ error: 'Publication Not Found!'})
 
@@ -80,7 +89,7 @@ class ConteudosController {
 
   public update = async (req: Request, res: Response) => {
     const { id_conteudo } = req.params
-    let { titulo, imagem, conteudo, ativo, id_ferramenta, tags } = req.body
+    let { titulo, imagem, descricao, conteudo, ativo, id_ferramenta, tags } = req.body
 
     const existsConteudo = await this._conteudoModel.existsConteudo(Number(id_conteudo))
 
@@ -88,7 +97,8 @@ class ConteudosController {
 
     const data = {
       titulo, 
-      imagem, 
+      imagem,
+      descricao, 
       conteudo, 
       ativo: Boolean(ativo),
       id_ferramenta: Number(id_ferramenta)

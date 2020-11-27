@@ -14,9 +14,10 @@ const Switch: React.FC<ISwtichProps> = ({
   label,
   isChecked,
   className,
+
   ...rest
 }) => {
-  const [checked, setChecked] = useState(!!isChecked);
+  const [checked, setChecked] = useState(Boolean(isChecked));
 
   const handleCheck = useCallback(() => {
     setChecked(!checked);

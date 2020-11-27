@@ -54,10 +54,10 @@ const category: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1>Categoria</h1>
+              <h1 className={styles.title}>Categoria</h1>
               <Button
                 type="button"
-                size="large"
+                variant="contrast"
                 icon={MdAdd}
                 onClick={() => formRef.current.submitForm()}
               >

@@ -1,9 +1,11 @@
+/* eslint-disable react/jsx-curly-newline */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { MdAdd } from 'react-icons/md';
+import { MdEdit } from 'react-icons/md';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 
@@ -11,7 +13,7 @@ import { displayErrors } from '../../../util/error';
 import api from '../../../services/api';
 import { uploadFile } from '../../../util/upload';
 
-import Menu from '../Menu';
+import Menu from '../../Admin/Menu';
 
 import Navbar from '../../../components/Navbar';
 import Button from '../../../components/Button';
@@ -20,7 +22,18 @@ import Select from '../../../components/Select';
 import InputFile from '../../../components/InputFile';
 import Footer from '../../../components/Footer';
 
-import styles from '../Content.module.sass';
+import styles from '../Edit.module.sass';
+
+interface Params {
+  id: string;
+}
+
+interface Ferramenta {
+  id_ferramenta?: number;
+  descritivo?: string;
+  icone?: string;
+  id_categoria?: number;
+}
 
 interface CategoriaResponse {
   id_categoria: number;
@@ -34,14 +47,31 @@ interface CategoriaOptions {
 }
 
 const tool: React.FC = () => {
+  const params = useParams() as Params;
+  const [editFerramenta, setEditFerramenta] = useState<Ferramenta>();
   const [categorias, setCategorias] = useState<CategoriaOptions[]>([]);
-
   const formRef: any = useRef<FormHandles>(null);
+
+  useEffect(() => {
+    api
+      .get(`/ferramentas?limit=1&id_ferramenta=${params.id}`)
+      .then(response => {
+        setEditFerramenta(response.data);
+      });
+  }, [params.id]);
 
   const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       // Remove all previous errors
       formRef.current.setErrors({});
+
+      console.log('Formulário', data);
+
+      if (data.icone === undefined) {
+        data.icone = editFerramenta?.icone;
+      } else {
+        data.icone = await uploadFile(data.icone as File);
+      }
 
       const schema = Yup.object().shape({
         descritivo: Yup.string()
@@ -59,15 +89,15 @@ const tool: React.FC = () => {
         abortEarly: false,
       });
 
-      data.icone = await uploadFile(data.icone as File);
-
-      await api.post('/ferramentas', data);
-      toast.success('✅ Ferramenta cadastrada com sucesso!');
+      await api.put(`/ferramentas/${params.id}`, data);
+      toast.success('✅ Ferramenta editada com sucesso!');
 
       formRef.current.reset();
+      window.location.href = 'http://localhost:3000/admin/tools';
     } catch (err) {
       displayErrors(err, formRef);
-      toast.error('❌ Erro ao cadastrar a Ferramenta!');
+      console.log(err, formRef);
+      toast.error('❌ Erro ao editar a Ferramenta!');
     }
   };
 
@@ -93,10 +123,10 @@ const tool: React.FC = () => {
               <Button
                 type="button"
                 variant="contrast"
-                icon={MdAdd}
+                icon={MdEdit}
                 onClick={() => formRef.current.submitForm()}
               >
-                Adicionar Ferramenta
+                Editar Ferramenta
               </Button>
             </div>
             <Form ref={formRef} onSubmit={handleSubmit} className={styles.form}>
@@ -104,6 +134,15 @@ const tool: React.FC = () => {
                 name="descritivo"
                 label="Descritivo"
                 placeholder="Ex: Visual Studio Code"
+                value={editFerramenta?.descritivo}
+                onChange={e =>
+                  setEditFerramenta({
+                    id_ferramenta: editFerramenta?.id_ferramenta,
+                    descritivo: e.target.value,
+                    id_categoria: editFerramenta?.id_categoria,
+                    icone: editFerramenta?.icone,
+                  })
+                }
                 className={styles.input}
                 containerClass={`${styles.noMar} ${styles.fullLine}`}
               />
@@ -112,6 +151,15 @@ const tool: React.FC = () => {
                 label="Categoria"
                 options={categorias}
                 initialDefaultValue
+                value={editFerramenta?.id_categoria}
+                onChange={e =>
+                  setEditFerramenta({
+                    id_ferramenta: editFerramenta?.id_ferramenta,
+                    descritivo: editFerramenta?.descritivo,
+                    id_categoria: Number(e.target.value),
+                    icone: editFerramenta?.icone,
+                  })
+                }
                 className={styles.input}
                 selectWrapperClass={styles.input}
                 containerClass={`${styles.noMar} ${styles.fullLine}`}
@@ -119,6 +167,7 @@ const tool: React.FC = () => {
               <InputFile
                 name="icone"
                 label="Icone"
+                // previewSrc={editFerramenta?.icone}
                 containerClass={`${styles.noMar} ${styles.fullLine}`}
               />
             </Form>

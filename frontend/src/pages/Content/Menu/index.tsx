@@ -18,7 +18,7 @@ const Menu: React.FC = () => {
     <aside className={styles.sidebar}>
       <ul>
         <li>
-          <h2 className={styles.title}>Edição e criação de conteúdo</h2>
+          <h2 className={styles.title}>Criação de conteúdo</h2>
         </li>
         <li className={styles.divider} />
         <li>

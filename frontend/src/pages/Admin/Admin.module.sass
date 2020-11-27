@@ -1,7 +1,7 @@
 @import '../../App.sass'
 
 .gridHalf
-  grid-template-columns: minmax(auto, 20%) 1fr
+  grid-template-columns: minmax(auto, 20vw) minmax(auto, 80vw)
   grid-gap: 0
 
 .sidebar
@@ -41,6 +41,7 @@
       margin-right: 10px
 
 .section
+  position: relative
   padding-top: 0
 
 .header
@@ -56,14 +57,20 @@
   background-color: $greyL3
   border-bottom: 3px solid $greyL2
 
+  .title
+    font-size: $headingSize4
+
 .tableWrapper
   display: block
   width: 100%
   overflow-x: auto
+  -webkit-overflow-scrolling: touch
+  -ms-overflow-style: -ms-autohiding-scrollbar
 
   table
     width: 100%
     margin-bottom: 1rem
+    background-color: transparent
     border-collapse: collapse
     border-spacing: 0
     text-align: center
@@ -77,7 +84,7 @@
       border-bottom: none
 
     th
-      padding: 2rem .75rem
+      padding: 1.5rem .75rem
       font-size: 16px
       background: $greyL2
       vertical-align: inherit
@@ -96,7 +103,7 @@
       vertical-align: middle
       min-width: 124px
 
-      &.actionsTd
+      .actions
         display: flex
         align-items: center
         justify-content: center
@@ -106,3 +113,27 @@
 
           &:last-of-type
             margin: 0
+
+      .thumbnail
+        display: flex
+        align-items: center
+        justify-content: center
+        width: 50px
+        height: 50px
+        overflow: hidden
+        border-radius: 10px
+
+        .img
+          min-width: 100%
+          max-width: 120%
+          min-height: 100%
+          max-height: 120%
+
+      .tag
+        display: block
+        background-color: $contrast
+        color: $light
+        font-weight: 700
+        padding: 4px 8px
+        border-radius: 10px
+        margin-bottom: 5px

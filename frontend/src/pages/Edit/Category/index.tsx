@@ -1,25 +1,38 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useRef } from 'react';
-import { FormHandles } from '@unform/core';
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Form } from '@unform/web';
-import { MdAdd } from 'react-icons/md';
-import * as Yup from 'yup';
+import { FormHandles } from '@unform/core';
 import { toast } from 'react-toastify';
+import * as Yup from 'yup';
+import { MdSave } from 'react-icons/md';
 
 import { displayErrors } from '../../../util/error';
 import api from '../../../services/api';
 
-import Menu from '../Menu';
+import Menu from '../../Admin/Menu';
 
 import Navbar from '../../../components/Navbar';
-import Input from '../../../components/Input';
 import Button from '../../../components/Button';
+import Input from '../../../components/Input';
 import Footer from '../../../components/Footer';
 
-import styles from '../Content.module.sass';
+import styles from '../Edit.module.sass';
 
-const tag: React.FC = () => {
+interface Params {
+  id: string;
+}
+
+const category: React.FC = () => {
+  const params = useParams() as Params;
+  const [editCategory, setEditCategory] = useState<any>();
   const formRef: any = useRef<FormHandles>(null);
+
+  useEffect(() => {
+    api.get(`/categorias?limit=1&id_categoria=${params.id}`).then(response => {
+      setEditCategory(response.data.descritivo);
+    });
+  }, [params.id]);
 
   const handleSubmit = async (data: Record<string, unknown>) => {
     try {
@@ -29,20 +42,21 @@ const tag: React.FC = () => {
       const schema = Yup.object().shape({
         descritivo: Yup.string()
           .required('Este compo é obrigatório')
-          .min(3, 'Este campo deve conter ao minimo 3 caracteres'),
+          .min(3, 'Este campo deve conter ao minimo 3 caracteres.'),
       });
 
       await schema.validate(data, {
         abortEarly: false,
       });
 
-      await api.post('/tags', data);
-      toast.success('✅ Tag cadastrada com sucesso!');
+      await api.put(`/categorias/${params.id}`, data);
+      toast.success('✅ Categoria editada com sucesso!');
 
       formRef.current.reset();
+      window.location.href = 'http://localhost:3000/admin/categories';
     } catch (err) {
       displayErrors(err, formRef);
-      toast.error('❌ Erro ao cadastrar a Tag!');
+      toast.error('❌ Erro ao editar a categoria!');
     }
   };
 
@@ -54,23 +68,25 @@ const tag: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1 className={styles.title}>Tag</h1>
+              <h1 className={styles.title}>Editar categoria</h1>
               <Button
                 type="button"
-                icon={MdAdd}
                 variant="contrast"
+                icon={MdSave}
                 onClick={() => formRef.current.submitForm()}
               >
-                Adicionar Tag
+                Salvar
               </Button>
             </div>
             <Form ref={formRef} onSubmit={handleSubmit} className={styles.form}>
               <Input
                 name="descritivo"
                 label="Descritivo"
-                placeholder="Ex: Programação"
-                containerClass={styles.fullLine}
+                placeholder="Ex: Editor de vídeos"
+                value={editCategory}
                 className={styles.input}
+                containerClass={styles.fullLine}
+                onChange={e => setEditCategory(e.target.value)}
               />
             </Form>
           </div>
@@ -81,4 +97,4 @@ const tag: React.FC = () => {
   );
 };
 
-export default tag;
+export default category;

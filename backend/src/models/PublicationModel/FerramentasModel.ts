@@ -23,6 +23,12 @@ class FerramentasModel extends SimpleCRUD {
     return ferramentas
   }
 
+  public indexFerramentasId = async (id_ferramenta: number) => {
+    const ferramentas = await this.ReadWithWhereFirst({ id_ferramenta })
+
+    return ferramentas
+  }
+
   public updateFerramentas = async (data: object, id_ferramenta: number) => {
     await this.Update(data, { id_ferramenta })
   }

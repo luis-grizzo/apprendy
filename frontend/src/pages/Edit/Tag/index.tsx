@@ -1,25 +1,38 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { MdAdd } from 'react-icons/md';
+import { MdEdit } from 'react-icons/md';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 
 import { displayErrors } from '../../../util/error';
 import api from '../../../services/api';
 
-import Menu from '../Menu';
+import Menu from '../../Admin/Menu';
 
 import Navbar from '../../../components/Navbar';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 import Footer from '../../../components/Footer';
 
-import styles from '../Content.module.sass';
+import styles from '../Edit.module.sass';
+
+interface Params {
+  id: string;
+}
 
 const tag: React.FC = () => {
+  const params = useParams() as Params;
+  const [editTag, setEdiTag] = useState<any>();
   const formRef: any = useRef<FormHandles>(null);
+
+  useEffect(() => {
+    api.get(`/tags?limit=1&id_tag=${params.id}`).then(response => {
+      setEdiTag(response.data.descritivo);
+    });
+  }, [params.id]);
 
   const handleSubmit = async (data: Record<string, unknown>) => {
     try {
@@ -36,13 +49,14 @@ const tag: React.FC = () => {
         abortEarly: false,
       });
 
-      await api.post('/tags', data);
-      toast.success('✅ Tag cadastrada com sucesso!');
+      await api.put(`/tags/${params.id}`, data);
+      toast.success('✅ Tag editada com sucesso!');
 
       formRef.current.reset();
+      window.location.href = 'http://localhost:3000/admin/tags';
     } catch (err) {
       displayErrors(err, formRef);
-      toast.error('❌ Erro ao cadastrar a Tag!');
+      toast.error('❌ Erro ao editar a Tag!');
     }
   };
 
@@ -57,11 +71,11 @@ const tag: React.FC = () => {
               <h1 className={styles.title}>Tag</h1>
               <Button
                 type="button"
-                icon={MdAdd}
+                icon={MdEdit}
                 variant="contrast"
                 onClick={() => formRef.current.submitForm()}
               >
-                Adicionar Tag
+                Editar Tag
               </Button>
             </div>
             <Form ref={formRef} onSubmit={handleSubmit} className={styles.form}>
@@ -69,8 +83,10 @@ const tag: React.FC = () => {
                 name="descritivo"
                 label="Descritivo"
                 placeholder="Ex: Programação"
+                value={editTag}
                 containerClass={styles.fullLine}
                 className={styles.input}
+                onChange={e => setEdiTag(e.target.value)}
               />
             </Form>
           </div>

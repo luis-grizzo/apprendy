@@ -1,13 +1,13 @@
 import React from 'react';
 import { MdSend } from 'react-icons/md';
 
-import Menu from '../Menu';
+import Menu from '../../Admin/Menu';
 
 import Navbar from '../../../components/Navbar';
 import Button from '../../../components/Button';
 import Footer from '../../../components/Footer';
 
-import styles from '../Content.module.sass';
+import styles from '../Edit.module.sass';
 
 const question: React.FC = () => {
   return (
@@ -18,8 +18,8 @@ const question: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1 className={styles.title}>Pergunta</h1>
-              <Button type="button" variant="contrast" icon={MdSend}>
+              <h1>Pergunta</h1>
+              <Button type="button" icon={MdSend}>
                 Criar Pergunta
               </Button>
             </div>

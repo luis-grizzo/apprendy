@@ -9,11 +9,15 @@ class CategoriaController {
 
   public index = async (req: Request, res: Response) => {
     const { limit } = req.query
+    const { id_categoria } = req.query
 
     if(!limit) return res.status(400).json({ error: 'limit not informed' })
     if(Number(limit) <= 0) return res.status(401).json({ error: 'limit is not valid' })
-    
-    const category = await this._categoriaModel.indexCategoria(Number(limit))
+
+    let category = []
+
+    if(Number(id_categoria) > 0) category = await this._categoriaModel.indexCategoriaId(Number(id_categoria))
+    else category = await this._categoriaModel.indexCategoria(Number(limit))
     return res.json(category)
   }
 
