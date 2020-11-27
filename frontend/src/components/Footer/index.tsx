@@ -11,23 +11,23 @@ interface CategoriesProps {
   descritivo: string;
 }
 
-interface TagsProps {
-  id_tag: number;
-  descritivo: string;
-}
+// interface TagsProps {
+//   id_tag: number;
+//   descritivo: string;
+// }
 
 const Footer: React.FC = () => {
   const [categories, setCategories] = useState<Array<CategoriesProps>>([]);
-  const [tags, setTags] = useState<Array<TagsProps>>([]);
+  // const [tags, setTags] = useState<Array<TagsProps>>([]);
 
   useEffect(() => {
     api.get('/categorias?limit=6').then(response => {
       setCategories(response.data);
     });
 
-    api.get('/tags?limit=6').then(response => {
-      setTags(response.data);
-    });
+    // api.get('/tags?limit=6').then(response => {
+    //   setTags(response.data);
+    // });
   }, []);
 
   return (
@@ -58,7 +58,7 @@ const Footer: React.FC = () => {
               ))}
             </div>
           </div>
-          <div className={styles.content}>
+          {/* <div className={styles.content}>
             <h3 className={`h3 ${styles.title}`}>Tags</h3>
             <div className={styles.linksWrapper}>
               {tags.map(tag => (
@@ -74,7 +74,7 @@ const Footer: React.FC = () => {
                 </Link>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className={styles.copyright}>

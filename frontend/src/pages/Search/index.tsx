@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Switch from '../../components/Switch';
 import Card from '../../components/Card';
-import Pagination from '../../components/Pagination';
+// import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
 
 import styles from './Search.module.sass';
@@ -29,10 +29,10 @@ interface PostProperties {
     data_publicacao: string;
     descricao: string;
   };
-  tag: Array<{
-    id_tag: number;
-    descritivo: string;
-  }>;
+  // tag: Array<{
+  //   id_tag: number;
+  //   descritivo: string;
+  // }>;
 }
 
 const Search: React.FC = () => {
@@ -40,7 +40,7 @@ const Search: React.FC = () => {
   const [categories, setCategories] = useState<Array<CategoriesProps>>([]);
   const [tags, setTags] = useState<Array<TagsProps>>([]);
   const [posts, setPosts] = useState<PostProperties[]>([]);
-  const [tagsSelecteds, setTagsSelecteds] = useState<Array<string>>([]);
+  // const [tagsSelecteds, setTagsSelecteds] = useState<Array<string>>([]);
 
   useEffect(() => {
     api.get('/categorias?limit=6').then(response => {
@@ -106,11 +106,11 @@ const Search: React.FC = () => {
                 title={post.publicacao.titulo}
                 date={post.publicacao.data_publicacao}
                 description={post.publicacao.descricao}
-                tags={post.tag}
+                // tags={post.tag}
               />
             ))}
           </div>
-          <Pagination pageCount={30} />
+          {/* <Pagination pageCount={30} /> */}
         </section>
       </main>
       <Footer />

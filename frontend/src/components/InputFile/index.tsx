@@ -20,6 +20,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   containerClass?: string;
   label?: string;
+  previewSrc?: string;
   inputWrapperClass?: string;
   className?: string;
 }
@@ -27,6 +28,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const InputFile: React.FC<InputProps> = ({
   name,
   label,
+  previewSrc,
   containerClass,
   inputWrapperClass,
   className,
@@ -88,7 +90,7 @@ const InputFile: React.FC<InputProps> = ({
           />
           <div className={styles.preview}>
             <img
-              src={preview || defaultImage}
+              src={preview || previewSrc || defaultImage}
               alt={name}
               className={styles.img}
             />

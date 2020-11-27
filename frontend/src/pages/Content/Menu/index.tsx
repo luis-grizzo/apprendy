@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   MdBook,
@@ -9,9 +9,23 @@ import {
   MdPeople,
 } from 'react-icons/md';
 
+import api from '../../../services/api';
+
 import styles from '../Content.module.sass';
 
+interface Login {
+  id_tipo: string;
+}
+
 const Menu: React.FC = () => {
+  const [login, setLogin] = useState<Login>();
+
+  useEffect(() => {
+    api.get('/users/home/info').then(response => {
+      setLogin(response.data);
+    });
+  }, []);
+
   const location = useLocation();
 
   return (
@@ -33,7 +47,7 @@ const Menu: React.FC = () => {
           </Link>
         </li>
         <li className={styles.divider} />
-        <li>
+        {/* <li>
           <Link
             to="/content/tag"
             className={`${styles.link} ${
@@ -44,32 +58,36 @@ const Menu: React.FC = () => {
             Tags
           </Link>
         </li>
-        <li className={styles.divider} />
-        <li>
-          <Link
-            to="/content/tool"
-            className={`${styles.link} ${
-              /content?\/tool/.test(location.pathname) && styles.active
-            }`}
-          >
-            <MdBuild className={styles.icon} />
-            Ferramentas
-          </Link>
-        </li>
-        <li className={styles.divider} />
-        <li>
-          <Link
-            to="/content/category"
-            className={`${styles.link} ${
-              /content?\/category/.test(location.pathname) && styles.active
-            }`}
-          >
-            <MdList className={styles.icon} />
-            Categorias
-          </Link>
-        </li>
-        <li className={styles.divider} />
-        <li>
+        <li className={styles.divider} /> */}
+        {Number(login?.id_tipo) !== 1 && (
+          <>
+            <li>
+              <Link
+                to="/content/tool"
+                className={`${styles.link} ${
+                  /content?\/tool/.test(location.pathname) && styles.active
+                }`}
+              >
+                <MdBuild className={styles.icon} />
+                Ferramentas
+              </Link>
+            </li>
+            <li className={styles.divider} />
+            <li>
+              <Link
+                to="/content/category"
+                className={`${styles.link} ${
+                  /content?\/category/.test(location.pathname) && styles.active
+                }`}
+              >
+                <MdList className={styles.icon} />
+                Categorias
+              </Link>
+            </li>
+            <li className={styles.divider} />
+          </>
+        )}
+        {/* <li>
           <Link
             to="/content/user"
             className={`${styles.link} ${
@@ -80,8 +98,8 @@ const Menu: React.FC = () => {
             Usuários
           </Link>
         </li>
-        <li className={styles.divider} />
-        <li>
+        <li className={styles.divider} /> */}
+        {/* <li>
           <Link
             to="/content/question"
             className={`${styles.link} ${
@@ -92,7 +110,7 @@ const Menu: React.FC = () => {
             Perguntas
           </Link>
         </li>
-        <li className={styles.divider} />
+        <li className={styles.divider} /> */}
       </ul>
     </aside>
   );

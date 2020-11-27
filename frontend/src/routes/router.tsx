@@ -27,6 +27,7 @@ import AdminTools from '../pages/Admin/Tools';
 import AdminCategories from '../pages/Admin/Categories';
 import AdminUsers from '../pages/Admin/Users';
 import AdminQuestions from '../pages/Admin/Questions';
+import AdminComments from '../pages/Admin/Comments';
 
 import Comunity from '../pages/Comunity';
 import Question from '../pages/Question';
@@ -64,6 +65,7 @@ const Routes: React.FC = () => (
       <PrivateRoute path="/admin/categories" component={AdminCategories} />
       <PrivateRoute path="/admin/users" component={AdminUsers} />
       <PrivateRoute path="/admin/questions" component={AdminQuestions} />
+      <PrivateRoute path="/admin/comments" component={AdminComments} />
 
       <PrivateRoute path="/comunity" component={Comunity} />
       <PrivateRoute path="/question/:id" component={Question} />

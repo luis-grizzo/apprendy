@@ -59,13 +59,15 @@ const tools: React.FC = () => {
                       <td>{tool.id_ferramenta}</td>
                       <td>{tool.descritivo}</td>
                       <td>{tool.id_categoria}</td>
-                      <td className={styles.actionsTd}>
-                        <Link
-                          to={`/edit/tool/${tool.id_ferramenta}`}
-                          className={styles.action}
-                        >
-                          <Button icon={MdEdit}>Editar</Button>
-                        </Link>
+                      <td>
+                        <div className={styles.actions}>
+                          <Link
+                            to={`/edit/tool/${tool.id_ferramenta}`}
+                            className={styles.action}
+                          >
+                            <Button icon={MdEdit}>Editar</Button>
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))}

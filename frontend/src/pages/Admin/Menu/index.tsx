@@ -1,13 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {
-  MdBook,
-  MdBookmark,
-  MdBuild,
-  MdChat,
-  MdList,
-  MdPeople,
-} from 'react-icons/md';
+import { MdBook, MdBuild, MdChat, MdList, MdPeople } from 'react-icons/md';
 
 import styles from '../Admin.module.sass';
 
@@ -35,6 +28,18 @@ const Menu: React.FC = () => {
         <li className={styles.divider} />
         <li>
           <Link
+            to="/admin/comments"
+            className={`${styles.link} ${
+              /admin?\/comments/.test(location.pathname) && styles.active
+            }`}
+          >
+            <MdChat className={styles.icon} />
+            Comentários
+          </Link>
+        </li>
+        {/* <li className={styles.divider} /> */}
+        {/* <li>
+          <Link
             to="/admin/tags"
             className={`${styles.link} ${
               /admin?\/tags/.test(location.pathname) && styles.active
@@ -43,7 +48,7 @@ const Menu: React.FC = () => {
             <MdBookmark className={styles.icon} />
             Tags
           </Link>
-        </li>
+        </li> */}
         <li className={styles.divider} />
         <li>
           <Link
@@ -80,7 +85,7 @@ const Menu: React.FC = () => {
             Usuários
           </Link>
         </li>
-        <li className={styles.divider} />
+        {/* <li className={styles.divider} />
         <li>
           <Link
             to="/admin/questions"
@@ -91,7 +96,7 @@ const Menu: React.FC = () => {
             <MdChat className={styles.icon} />
             Perguntas
           </Link>
-        </li>
+        </li> */}
         <li className={styles.divider} />
       </ul>
     </aside>

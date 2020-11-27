@@ -8,7 +8,7 @@ import Navbar from '../../components/Navbar';
 import Input from '../../components/Input';
 import Carousel from '../../components/Caroussel';
 import Card from '../../components/Card';
-import Pagination from '../../components/Pagination';
+// import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
 
 import styles from './Home.module.sass';
@@ -35,7 +35,7 @@ const Home: React.FC = () => {
   const [posts, setPosts] = useState<PostProperties[]>([]);
 
   useEffect(() => {
-    api.get('/conteudos').then(response => {
+    api.get('/conteudos?onlyActive=true').then(response => {
       setPosts(response.data);
     });
   }, []);
@@ -88,7 +88,6 @@ const Home: React.FC = () => {
                   { value: 'recursos', label: 'Recursos', selected: true },
                   { value: 'ferramentas', label: 'Ferramentas' },
                   { value: 'categorias', label: 'Categorias' },
-                  { value: 'tags', label: 'Tags' },
                 ]}
                 selectClass={styles.inputSelect}
                 button
@@ -105,7 +104,20 @@ const Home: React.FC = () => {
       </header>
       <section className="section container">
         <h2 className={styles.title}>Destaques</h2>
-        <Carousel contents={handleGetFeatured()} />
+        {/* <Carousel contents={handleGetFeatured()} /> */}
+        <div className={styles.gridAuto}>
+          {posts.map(post => (
+            <Card
+              key={post.publicacao.id_conteudo}
+              postId={post.publicacao.id_conteudo}
+              image={post.publicacao.imagem}
+              title={post.publicacao.titulo}
+              date={post.publicacao.data_publicacao}
+              description={post.publicacao.descricao}
+              imageBg
+            />
+          ))}
+        </div>
       </section>
       <section className="section container">
         <h2 className={styles.title}>Ultimos posts</h2>
@@ -118,11 +130,11 @@ const Home: React.FC = () => {
               title={post.publicacao.titulo}
               date={post.publicacao.data_publicacao}
               description={post.publicacao.descricao}
-              tags={post.tag}
+              // tags={post.tag}
             />
           ))}
         </div>
-        <Pagination pageCount={30} />
+        {/* <Pagination pageCount={30} /> */}
       </section>
       <Footer />
     </>

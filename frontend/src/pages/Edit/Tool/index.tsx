@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { MdEdit } from 'react-icons/md';
+import { MdSave } from 'react-icons/md';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 
@@ -119,14 +119,14 @@ const tool: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1 className={styles.title}>Ferramenta</h1>
+              <h1 className={styles.title}>Editar ferramenta</h1>
               <Button
                 type="button"
                 variant="contrast"
-                icon={MdEdit}
+                icon={MdSave}
                 onClick={() => formRef.current.submitForm()}
               >
-                Editar Ferramenta
+                Salvar
               </Button>
             </div>
             <Form ref={formRef} onSubmit={handleSubmit} className={styles.form}>
@@ -167,7 +167,7 @@ const tool: React.FC = () => {
               <InputFile
                 name="icone"
                 label="Icone"
-                // previewSrc={editFerramenta?.icone}
+                previewSrc={editFerramenta?.icone}
                 containerClass={`${styles.noMar} ${styles.fullLine}`}
               />
             </Form>

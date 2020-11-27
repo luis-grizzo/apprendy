@@ -66,7 +66,7 @@ const Caroussel: React.FC<CarousselProps> = ({
               title={content.publicacao.titulo}
               date={content.publicacao.data_publicacao}
               description={content.publicacao.descricao}
-              tags={content.tag}
+              // tags={content.tag}
               imageBg
             />
           </Slide>

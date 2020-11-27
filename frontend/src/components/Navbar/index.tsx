@@ -86,7 +86,6 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
                   { value: 'recursos', label: 'Recursos', selected: true },
                   { value: 'ferramentas', label: 'Ferramentas' },
                   { value: 'categorias', label: 'Categorias' },
-                  { value: 'tags', label: 'Tags' },
                 ]}
                 button
                 buttonIcon={MdSearch}
@@ -101,12 +100,12 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
                   </Button> */}
                 </Link>
               )}
-              <Link to="/comunity" className={styles.link}>
+              {/* <Link to="/comunity" className={styles.link}>
                 Comunidade
                 {/* <Button type="button" variant="outline" icon={MdPeople}>
                   Comunidade
-                </Button> */}
-              </Link>
+                </Button>
+              </Link> */}
               {logged && (
                 <Link to="/content/resource" className={styles.linkButton}>
                   <Button
@@ -185,26 +184,26 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
               </li>
               <li className={styles.divider} />
               <li>
-                <Link to="/content/tag" className={styles.link}>
+                <Link to="/content/resource" className={styles.link}>
                   <MdAdd className={styles.icon} />
                   Criar conteúdo
                 </Link>
               </li>
               <li className={styles.divider} />
-              <li>
+              {/* <li>
                 <Link to="/comunity" className={styles.link}>
                   <MdPeople className={styles.icon} />
                   Comunidade
                 </Link>
               </li>
-              <li className={styles.divider} />
-              <li>
+              <li className={styles.divider} /> */}
+              {/* <li>
                 <Link to="/content/question" className={styles.link}>
                   <MdChat className={styles.icon} />
                   Fazer uma pergunta
                 </Link>
               </li>
-              <li className={styles.divider} />
+              <li className={styles.divider} /> */}
               {user.id_tipo === 3 && (
                 <>
                   <li>

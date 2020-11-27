@@ -13,10 +13,12 @@ import {
   MdFavorite,
   MdBook,
   MdSave,
+  MdSecurity,
 } from 'react-icons/md';
 
 import { displayErrors } from '../../util/error';
 import api from '../../services/api';
+import { uploadFile } from '../../util/upload';
 
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
@@ -25,7 +27,7 @@ import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
 import CardPanel from '../../components/CardPanel';
 import Card from '../../components/Card';
-import Pagination from '../../components/Pagination';
+// import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
 
 import styles from './User.module.sass';
@@ -67,14 +69,28 @@ interface UserData {
   contents: Array<ContentData>;
 }
 
+interface Login {
+  id_usuario: number;
+}
+
+interface PerguntaSeguranca {
+  pergunta_seguranca: string;
+}
+
 const User: React.FC = () => {
   const params = useParams() as Params;
-  const [modalOpen, setModalOpen] = useState(false);
 
+  const [modalAccount, setModalAccount] = useState(false);
+  const [modalSecurity, setModalSecurity] = useState(false);
   const [infoLoading, setInfoLoading] = useState('Carregando...');
   const [userData, setUserData] = useState<UserData>();
+  const [securityQuestion, setSecurityQuestion] = useState<PerguntaSeguranca>();
+  const [login, setLogin] = useState<Login>();
+
+  console.log('Dados', userData);
 
   const formRef: any = useRef<FormHandles>(null);
+  const formRefSecurity: any = useRef<FormHandles>(null);
 
   useEffect(() => {
     api
@@ -85,11 +101,24 @@ const User: React.FC = () => {
       .catch(() => {
         setInfoLoading('404 - User Not Found');
       });
+
+    api.get('/users/home/info').then(response => {
+      setLogin(response.data);
+    });
   }, [params.id]);
 
-  const handleModal = () => {
-    setModalOpen(!modalOpen);
-    console.log('Novo valor - user page', modalOpen);
+  const handleModalAccount = () => {
+    setModalAccount(!modalAccount);
+  };
+
+  const handleModalSecurity = () => {
+    api
+      .get(`/users/secutiry/answer?email=${userData?.user.email}`)
+      .then(response => {
+        setSecurityQuestion(response.data);
+      });
+
+    setModalSecurity(!modalSecurity);
   };
 
   const handleUserUpdate = async (data: Record<string, unknown>) => {
@@ -97,7 +126,19 @@ const User: React.FC = () => {
       // Remove all previous errors
       formRef.current.setErrors({});
 
-      console.log(data);
+      console.log('Formulário update dados', data);
+
+      if (data.foto_perfil === undefined) {
+        data.foto_perfil = userData?.user.foto_perfil;
+      } else {
+        data.foto_perfil = await uploadFile(data.foto_perfil as File);
+      }
+
+      if (data.capa_perfil === undefined) {
+        data.capa_perfil = userData?.user.capa_perfil;
+      } else {
+        data.capa_perfil = await uploadFile(data.capa_perfil as File);
+      }
 
       const schema = Yup.object().shape({
         nome: Yup.string().required('Este compo é obrigatório'),
@@ -119,22 +160,41 @@ const User: React.FC = () => {
         abortEarly: false,
       });
 
-      const formData = new FormData();
-      formData.append('upload', data.foto_perfil as File);
-      const foto_perfilResponse = await api.post('/uploads', formData);
-      data.foto_perfil = foto_perfilResponse.data.url;
-
-      formData.set('upload', data.capa_perfil as File);
-      const capa_perfilResponse = await api.post('/uploads', formData);
-      data.capa_perfil = capa_perfilResponse.data.url;
-
       await api.put('/users', data);
       toast.success('✅ Perfil atualizado com sucesso!');
 
       formRef.current.reset();
+      window.location.href = `http://localhost:3000/user/${params.id}`;
     } catch (err) {
       displayErrors(err, formRef);
       toast.error('❌ Erro ao autalizar o perfil!');
+    }
+  };
+
+  const handleSecurityUpdate = async (data: Record<string, unknown>) => {
+    try {
+      formRef.current.setErrors({});
+
+      console.log('Formulário update segurança', data);
+
+      const schema = Yup.object().shape({
+        pergunta_seguranca: Yup.string().required('Este compo é obrigatório'),
+        resposta_seguranca: Yup.string().required('Este compo é obrigatório'),
+        senha: Yup.string().required('Este compo é obrigatório'),
+      });
+
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      await api.put('/users/security', data);
+      toast.success('✅ Segurança atualizada com sucesso!');
+
+      formRefSecurity.current.reset();
+      setModalSecurity(!modalSecurity);
+    } catch (err) {
+      displayErrors(err, formRef);
+      toast.error('❌ Erro ao autalizar a segurança!');
     }
   };
 
@@ -156,13 +216,61 @@ const User: React.FC = () => {
   return (
     <>
       <Modal
-        open={modalOpen}
+        open={modalSecurity}
+        title="Alterar dados de segurança"
+        headerContent={
+          // eslint-disable-next-line react/jsx-wrap-multilines
+          <Button
+            icon={MdSave}
+            variant="contrast"
+            onClick={() => formRefSecurity.current.submitForm()}
+          >
+            Salvar Alterações
+          </Button>
+        }
+      >
+        <Form
+          ref={formRefSecurity}
+          onSubmit={handleSecurityUpdate}
+          className={styles.form}
+          initialData={userData.user}
+        >
+          <Input
+            name="pergunta_seguranca"
+            label="Pergunta de segurança"
+            value={securityQuestion?.pergunta_seguranca}
+            onChange={e =>
+              setSecurityQuestion({
+                pergunta_seguranca: String(e.target.value),
+              })}
+            className={styles.input}
+            containerClass={styles.noMar}
+          />
+          <Input
+            name="resposta_seguranca"
+            label="Resposta"
+            type="password"
+            placeholder="********"
+            className={styles.input}
+            containerClass={styles.noMar}
+          />
+          <Input
+            name="senha"
+            label="Senha"
+            type="password"
+            placeholder="********"
+            className={styles.input}
+            containerClass={`${styles.noMar} ${styles.fullLine}`}
+          />
+        </Form>
+      </Modal>
+      <Modal
+        open={modalAccount}
         title="Alterar dados da conta"
         headerContent={
           // eslint-disable-next-line react/jsx-wrap-multilines
           <Button
             icon={MdSave}
-            size="large"
             variant="contrast"
             onClick={() => formRef.current.submitForm()}
           >
@@ -216,7 +324,9 @@ const User: React.FC = () => {
         contentClassName={styles.parallaxContent}
       />
       <main>
-        <section className="section containerFluid">
+        <section
+          className={`${styles.section} ${styles.containerFluid} ${styles.noPadBot}`}
+        >
           <CardPanel className={`${styles.userInfo}`}>
             <div className={styles.top}>
               <div className={styles.imageWrapper}>
@@ -230,18 +340,27 @@ const User: React.FC = () => {
                   className={styles.img}
                 />
               </div>
-              {
-                console.log(params)
-                // userData.user.id_usuario ===
-              }
-              <Button
-                type="button"
-                icon={MdEdit}
-                className={styles.button}
-                onClick={handleModal}
-              >
-                Editar perfil
-              </Button>
+              {login?.id_usuario === userData.user.id_usuario && (
+                <div className={styles.buttonsWrapper}>
+                  <Button
+                    type="button"
+                    icon={MdEdit}
+                    className={styles.button}
+                    onClick={handleModalAccount}
+                  >
+                    Editar perfil
+                  </Button>
+                  <Button
+                    type="button"
+                    icon={MdSecurity}
+                    className={styles.button}
+                    variant="contrast"
+                    onClick={handleModalSecurity}
+                  >
+                    Segurança
+                  </Button>
+                </div>
+              )}
             </div>
             <div className={styles.description}>
               <h1 className={styles.name}>{userData.user.nome}</h1>
@@ -266,9 +385,10 @@ const User: React.FC = () => {
             Favoritos de
             {` ${userData.user.nome}`}
           </h2>
-          <div className="gridAuto">
-            {userData.likes ? (
-              userData.likes.map(post => (
+          {console.log(userData.likes === [])}
+          {userData.likes === [] ? (
+            <div className="gridAuto">
+              {userData.likes.map(post => (
                 <Card
                   key={post.publicacao.id_conteudo}
                   postId={post.publicacao.id_conteudo}
@@ -276,17 +396,16 @@ const User: React.FC = () => {
                   title={post.publicacao.titulo}
                   date={post.publicacao.data_publicacao}
                   description={post.publicacao.descricao}
-                  tags={post.tag}
+                  imageBg
                 />
-              ))
-            ) : (
-              <p>
-                {userData.user.nome}
-                Não tem posts favoritos ainda
-              </p>
-            )}
-            {}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className={styles.noResources}>
+              {/* eslint-disable-next-line no-useless-escape */}
+              {`${userData.user.nome} não tem posts favoritos ainda. 🤔`}
+            </p>
+          )}
         </section>
         <section className="section container">
           <h2 className={styles.title}>
@@ -302,11 +421,11 @@ const User: React.FC = () => {
                 title={post.publicacao.titulo}
                 date={post.publicacao.data_publicacao}
                 description={post.publicacao.descricao}
-                tags={post.tag}
+                // tags={post.tag}
               />
             ))}
           </div>
-          <Pagination pageCount={30} />
+          {/* <Pagination pageCount={30} /> */}
         </section>
       </main>
       <Footer />

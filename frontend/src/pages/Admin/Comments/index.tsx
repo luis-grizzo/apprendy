@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react';
-import { MdAdd, MdEdit } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { MdClose } from 'react-icons/md';
 
 import api from '../../../services/api';
 
@@ -13,19 +12,21 @@ import Footer from '../../../components/Footer';
 
 import styles from '../Admin.module.sass';
 
-interface Category {
-  id_categoria: number;
-  descritivo: string;
+interface Comments {
+  id_comentario: string;
+  id_conteudo: number;
+  usuario_nome: string;
+  data_publicacao: string;
 }
 
-const category: React.FC = () => {
-  const [cateogries, setCategories] = useState<Category[]>([]);
+const comments: React.FC = () => {
+  const [commentsContent, setCommentsContent] = useState<Comments[]>([]);
 
-  useEffect(() => {
-    api.get<Category[]>('/categorias?limit=1000000').then(response => {
-      setCategories(response.data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   api.get<Comments[]>('/ferramentas?limit=1000000').then(response => {
+  //     setToolsContent(response.data);
+  //   });
+  // }, []);
 
   return (
     <>
@@ -35,35 +36,32 @@ const category: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1 className={styles.title}>Categorias</h1>
-              <Link to="/content/category">
-                <Button type="button" variant="contrast" icon={MdAdd}>
-                  Criar Categoria
-                </Button>
-              </Link>
+              <h1 className={styles.title}>Comentários</h1>
             </div>
             <div className={styles.tableWrapper}>
               <table>
                 <thead>
                   <tr className={styles.tableHead}>
                     <th>Id</th>
-                    <th>Descrição</th>
+                    <th>Id recurso</th>
+                    <th>Conteudo</th>
+                    <th>Autor</th>
+                    <th>Data da publicação</th>
                     <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {cateogries.map(categoryContent => (
+                  {commentsContent.map(comment => (
                     <tr>
-                      <td>{categoryContent.id_categoria}</td>
-                      <td>{categoryContent.descritivo}</td>
+                      <td>{comment.id_comentario}</td>
+                      <td>{comment.id_conteudo}</td>
+                      <td>{comment.usuario_nome}</td>
+                      <td>{comment.data_publicacao}</td>
                       <td>
                         <div className={styles.actions}>
-                          <Link
-                            to={`/edit/category/${categoryContent.id_categoria}`}
-                            className={styles.action}
-                          >
-                            <Button icon={MdEdit}>Editar</Button>
-                          </Link>
+                          <Button icon={MdClose} variant="error">
+                            Excluir
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -79,4 +77,4 @@ const category: React.FC = () => {
   );
 };
 
-export default category;
+export default comments;

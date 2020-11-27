@@ -33,10 +33,10 @@ interface FerramentaResponse {
   id_categoria: number;
 }
 
-interface TagResponse {
-  id_tag: number;
-  descritivo: string;
-}
+// interface TagResponse {
+//   id_tag: number;
+//   descritivo: string;
+// }
 
 interface selectOptions {
   value: number;
@@ -48,19 +48,19 @@ const resource: React.FC = () => {
   const [tags, setTags] = useState<selectOptions[]>([]);
   const [ferramentas, setFerramentas] = useState<selectOptions[]>([]);
   const [conteudo, setConteudo] = useState<any>();
-  const [tagsSelect, setTagsSelect] = useState<any>();
+  // const [tagsSelect, setTagsSelect] = useState<any>();
 
   const formRef: any = useRef<FormHandles>(null);
 
-  useEffect(() => {
-    api.get<TagResponse[]>('/tags?limit=10').then(response => {
-      const formattedTags = response.data.map(tag => ({
-        value: tag.id_tag,
-        label: tag.descritivo,
-      }));
-      setTags(formattedTags);
-    });
-  }, []);
+  // useEffect(() => {
+  //   api.get<TagResponse[]>('/tags?limit=10').then(response => {
+  //     const formattedTags = response.data.map(tag => ({
+  //       value: tag.id_tag,
+  //       label: tag.descritivo,
+  //     }));
+  //     setTags(formattedTags);
+  //   });
+  // }, []);
 
   useEffect(() => {
     api.get<FerramentaResponse[]>('/ferramentas?limit=10').then(response => {
@@ -77,11 +77,13 @@ const resource: React.FC = () => {
       // Remove all previous errors
       formRef.current.setErrors({});
 
+      console.log('Formulário', data);
+
       const schema = Yup.object().shape({
         titulo: Yup.string()
           .required('Este compo é obrigatório')
           .min(8, 'Este campo deve conter ao minimo 8 caracteres'),
-        tags: Yup.number().moreThan(0, 'Este campo é obrigatório'),
+        // tags: Yup.number().moreThan(0, 'Este campo é obrigatório'),
         ferramenta: Yup.number().moreThan(0, 'Este campo é obrigatório'),
         descricao: Yup.string()
           .required('Este compo é obrigatório')
@@ -98,9 +100,10 @@ const resource: React.FC = () => {
 
       const response = await api.post('/uploads', formData);
 
+      data.ativo = Number(data.ativo);
       data.imagem = response.data.url;
       data.conteudo = conteudo.level.content;
-      data.tags = tagsSelect.map((tag: { value: any }) => tag.value);
+      // data.tags = tagsSelect.map((tag: { value: any }) => tag.value);
       // data.ativo = true;
 
       await api.post('/conteudos', data);
@@ -146,7 +149,7 @@ const resource: React.FC = () => {
                 className={styles.input}
                 containerClass={`${styles.fullLine} ${styles.noMar}`}
               />
-              <div className={styles.reactSelect}>
+              {/* <div className={styles.reactSelect}>
                 <label htmlFor="tags">Tags</label>
                 <Select
                   id="tags"
@@ -157,20 +160,23 @@ const resource: React.FC = () => {
                   classNamePrefix="reactSelect"
                   onChange={content => setTagsSelect(content)}
                 />
-              </div>
-              {/* <Select
-                name="tags[]"
-                label="Tags"
-                multiple
-                options={tags}
-                className={styles.selectMult}
-                selectWrapperClass={styles.selectMult}
+              </div> */}
+              <CustomSelect
+                name="ativo"
+                label="Status"
+                options={[
+                  { value: Number(1), label: 'Ativo', selected: true },
+                  { value: Number(0), label: 'Inativo' },
+                ]}
+                className={styles.input}
+                selectWrapperClass={styles.input}
                 containerClass={styles.noMar}
-              /> */}
+              />
               <CustomSelect
                 name="id_ferramenta"
                 label="Ferramenta"
                 options={ferramentas}
+                initialDefaultValue
                 className={styles.input}
                 selectWrapperClass={styles.input}
                 containerClass={styles.noMar}
@@ -183,7 +189,11 @@ const resource: React.FC = () => {
                 containerClass={`${styles.fullLine} ${styles.noMar}`}
               />
               <div className={styles.editorContainer}>
+                <label htmlFor="conteudo" className={styles.label}>
+                  Conteúdo
+                </label>
                 <Editor
+                  textareaName="conteudo"
                   initialValue="<h1>Titulo</h1><p>Seu conteúdo vai aqui!</p><h2>Sub-titulo</h2><p>Mais conteúdo aqui!</p>"
                   init={{
                     height: 500,

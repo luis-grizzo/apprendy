@@ -11,10 +11,10 @@ interface ICardProps {
   title: string;
   date: string;
   description: string;
-  tags: Array<{
-    id_tag: number;
-    descritivo: string;
-  }>;
+  // tags: Array<{
+  //   id_tag: number;
+  //   descritivo: string;
+  // }>;
   imageBg?: boolean;
 }
 
@@ -24,7 +24,7 @@ const Card: React.FC<ICardProps> = ({
   title,
   date,
   description,
-  tags,
+  // tags,
   imageBg,
 }) => {
   return (
@@ -34,11 +34,11 @@ const Card: React.FC<ICardProps> = ({
           <div className={styles.cardImage}>
             <img src={image} alt={title} />
             <div className={styles.tagsContainer}>
-              {tags.map(tag => (
+              {/* {tags.map(tag => (
                 <span key={tag.id_tag} className={styles.tag}>
                   {tag.descritivo}
                 </span>
-              ))}
+              ))} */}
             </div>
             <div className={styles.cardContent}>
               <span className={styles.date}>
@@ -54,11 +54,11 @@ const Card: React.FC<ICardProps> = ({
             <div className={styles.cardImage}>
               <img src={image} alt={title} />
               <div className={styles.tagsContainer}>
-                {tags.map(tag => (
+                {/* {tags.map(tag => (
                   <span key={tag.id_tag} className={styles.tag}>
                     {tag.descritivo}
                   </span>
-                ))}
+                ))} */}
               </div>
             </div>
             <div className={styles.cardContent}>

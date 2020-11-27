@@ -8,7 +8,7 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
-import { MdSend } from 'react-icons/md';
+import { MdSave } from 'react-icons/md';
 import { Editor } from '@tinymce/tinymce-react';
 
 import { displayErrors } from '../../../util/error';
@@ -18,12 +18,12 @@ import api from '../../../services/api';
 import Menu from '../../Admin/Menu';
 
 import Navbar from '../../../components/Navbar';
-import Switch from '../../../components/Switch';
+// import Switch from '../../../components/Switch';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import InputFile from '../../../components/InputFile';
 import CustomSelect from '../../../components/Select';
-import ReactSelect from '../../../components/ReactSelect';
+// import ReactSelect from '../../../components/ReactSelect';
 import Footer from '../../../components/Footer';
 
 import styles from '../Edit.module.sass';
@@ -48,41 +48,30 @@ interface Content {
   imagem: string;
   id_ferramenta: number;
   descricao: string;
-  conteudo: string;
+  conteudo: any;
 }
 
 interface ContentResponse {
   publicacao: Content;
-  tag: Tag[];
 }
 
-interface Tag {
-  id_tag: number;
-  descritivo: string;
-}
+// interface Tag {
+//   id_tag: number;
+//   descritivo: string;
+// }
 
 const resource: React.FC = () => {
   const params = useParams() as Params;
-  const [editConteudo, setEditConteudo] = useState<ContentResponse>();
-  const [contentTags, setContentTags] = useState<selectOptions[]>([]);
-  const [tags, setTags] = useState<selectOptions[]>([]);
+  const [editConteudo, setEditConteudo] = useState<Content>();
   const [ferramentas, setFerramentas] = useState<selectOptions[]>([]);
 
   useEffect(() => {
     Promise.all([
       api.get<ContentResponse>(`/conteudos/${params.id}?onlyActive=false`),
-      api.get<Tag[]>('/tags?limit=1000000'),
       api.get<FerramentaResponse[]>('/ferramentas?limit=10000000'),
     ]).then(response => {
-      const [contentResponse, tagResponse, toolResponse] = response;
-      setEditConteudo(contentResponse.data);
-      // setContentTags()
-      setTags(
-        tagResponse.data.map(tag => ({
-          value: tag.id_tag,
-          label: tag.descritivo,
-        })),
-      );
+      const [contentResponse, toolResponse] = response;
+      setEditConteudo(contentResponse.data.publicacao);
       setFerramentas(
         toolResponse.data.map(ferramenta => ({
           value: ferramenta.id_ferramenta,
@@ -93,7 +82,7 @@ const resource: React.FC = () => {
   }, [params.id]);
 
   // eslint-disable-next-line no-console
-  console.log('Conteúdo a ser editado', editConteudo);
+  console.log('Conteúdo', editConteudo);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formRef: any = useRef<FormHandles>(null);
@@ -105,6 +94,12 @@ const resource: React.FC = () => {
 
       // eslint-disable-next-line no-console
       console.log('Formulário', data);
+
+      if (data.imagem === undefined) {
+        data.imagem = editConteudo?.imagem;
+      } else {
+        data.imagem = await uploadFile(data.imagem as File);
+      }
 
       const schema = Yup.object().shape({
         titulo: Yup.string()
@@ -122,9 +117,13 @@ const resource: React.FC = () => {
         abortEarly: false,
       });
 
-      data.conteudo = editConteudo?.publicacao.conteudo;
-      data.tags = editConteudo?.tag.map(tag => tag.id_tag);
-      data.ativo = editConteudo?.publicacao.ativo;
+      // data.tags = editConteudo?.tag.map(tag => tag.id_tag);
+      if (data.conteudo === undefined) {
+        data.conteudo = editConteudo?.conteudo;
+      } else {
+        data.conteudo = editConteudo?.conteudo.level.content;
+      }
+      data.ativo = editConteudo?.ativo;
 
       await api.put(`/conteudos/${params.id}`, data);
       toast.success('✅ Recurso editado com sucesso!');
@@ -134,6 +133,7 @@ const resource: React.FC = () => {
     } catch (err) {
       displayErrors(err, formRef);
       toast.error('❌ Erro ao editar o Recurso!');
+      console.log(err);
     }
   };
 
@@ -147,16 +147,11 @@ const resource: React.FC = () => {
             <div className={styles.header}>
               <div className={styles.resourcesTitle}>
                 <h1 className={styles.title}>Editar recurso</h1>
-                <Switch
-                  name="ativo"
-                  label="Ativo"
-                  // onChange={e => setAtivo(Boolean(e.target.value))}
-                />
               </div>
               <Button
                 type="button"
                 variant="contrast"
-                icon={MdSend}
+                icon={MdSave}
                 onClick={() => formRef.current.submitForm()}
               >
                 Salvar
@@ -165,55 +160,79 @@ const resource: React.FC = () => {
             <Form
               ref={formRef}
               onSubmit={handleSubmit}
-              initialData={{
-                tags,
-              }}
               className={styles.form}
+              initialData={editConteudo}
             >
               <Input
                 name="titulo"
                 label="Titulo"
                 placeholder="Ex: Como usar o Visual Studio Code"
+                // value={editConteudo?.titulo}
+                // onChange={e =>
+                //   setEditConteudo({
+                //     titulo: e.target.value,
+                //     descricao: String(editConteudo?.descricao),
+                //     conteudo: String(editConteudo?.conteudo),
+                //     id_ferramenta: Number(editConteudo?.id_ferramenta),
+                //     imagem: String(editConteudo?.imagem),
+                //     ativo: Boolean(editConteudo?.ativo),
+                //   })
+                // }
                 className={styles.input}
                 containerClass={`${styles.fullLine} ${styles.noMar}`}
               />
-              <InputFile
-                name="imagem"
-                label="Imagem"
-                className={styles.input}
-                containerClass={`${styles.fullLine} ${styles.noMar}`}
-              />
-              <div className={styles.reactSelect}>
-                <label htmlFor="tags">Tags</label>
-                <ReactSelect
-                  id="tags"
-                  name="tags"
-                  options={tags}
-                  isMulti
-                  // value={tags.filter(
-                  //   tag =>
-                  //     tag.value ===
-                  //     contentTags?.filter(cTag => cTag === tag.value)[0],
-                  // )}
-                  // onChange={selectedOption => {
-                  //   if (!Array.isArray(selectedOption)) {
-                  //     setContentTags(selectedOption?.value);
-                  //   }
-                  // }}
-                  // onChange={content => setTagsSelect(content)}
-                />
-              </div>
               <CustomSelect
-                name="id_ferramenta"
-                label="Ferramenta"
-                initialDefaultValue
-                // value={editConteudo?.publicacao.id_ferramenta}
-                // onChange={e => setContentFerramenta(Number(e.target.value))}
-                options={ferramentas}
+                name="ativo"
+                label="Status"
+                options={[
+                  { value: Number(1), label: 'Ativo' },
+                  { value: Number(0), label: 'Inativo' },
+                ]}
+                value={Number(editConteudo?.ativo)}
+                onChange={e =>
+                  setEditConteudo({
+                    titulo: String(editConteudo?.titulo),
+                    descricao: String(editConteudo?.descricao),
+                    conteudo: String(editConteudo?.conteudo),
+                    id_ferramenta: Number(editConteudo?.id_ferramenta),
+                    imagem: String(editConteudo?.imagem),
+                    ativo: Boolean(e.target.value),
+                  })}
                 className={styles.input}
                 selectWrapperClass={styles.input}
                 containerClass={styles.noMar}
               />
+              <CustomSelect
+                name="id_ferramenta"
+                label="Ferramenta"
+                initialDefaultValue
+                options={ferramentas}
+                value={Number(editConteudo?.id_ferramenta)}
+                onChange={e =>
+                  setEditConteudo({
+                    titulo: String(editConteudo?.titulo),
+                    descricao: String(editConteudo?.descricao),
+                    conteudo: String(editConteudo?.conteudo),
+                    id_ferramenta: Number(e.target.value),
+                    imagem: String(editConteudo?.imagem),
+                    ativo: Boolean(editConteudo?.ativo),
+                  })
+                }
+                className={styles.input}
+                selectWrapperClass={styles.input}
+                containerClass={styles.noMar}
+              />
+              <InputFile
+                name="imagem"
+                label="Imagem"
+                previewSrc={String(editConteudo?.imagem)}
+                className={styles.input}
+                containerClass={`${styles.fullLine} ${styles.noMar}`}
+              />
+              {/* <div className={styles.reactSelect}>
+                <label htmlFor="tags">Tags</label>
+                <ReactSelect id="tags" name="tags" options={tags} isMulti />
+              </div> */}
               <Input
                 name="descricao"
                 label="Descrição"
@@ -222,10 +241,24 @@ const resource: React.FC = () => {
                 containerClass={`${styles.fullLine} ${styles.noMar}`}
               />
               <div className={styles.editorContainer}>
+                <label htmlFor="conteudo" className={styles.label}>
+                  Conteúdo
+                </label>
                 <Editor
+                  textareaName="conteudo"
                   initialValue="<h1>Titulo</h1><p>Seu conteúdo vai aqui!</p><h2>Sub-titulo</h2><p>Mais conteúdo aqui!</p>"
                   // value={editConteudo?.publicacao.conteudo}
                   // onChange={e => setConteudo(e.target.value)}
+                  value={editConteudo?.conteudo}
+                  onChange={e =>
+                    setEditConteudo({
+                      titulo: String(editConteudo?.titulo),
+                      descricao: String(editConteudo?.descricao),
+                      conteudo: e,
+                      id_ferramenta: Number(editConteudo?.id_ferramenta),
+                      imagem: String(editConteudo?.imagem),
+                      ativo: Boolean(editConteudo?.ativo),
+                    })}
                   init={{
                     height: 500,
                     width: '100%',
@@ -241,7 +274,6 @@ const resource: React.FC = () => {
                     alignleft aligncenter alignright | \
                     bullist numlist outdent indent | help',
                   }}
-                  // onChange={content => setConteudo(content)}
                 />
               </div>
             </Form>

@@ -58,7 +58,7 @@ class ConteudosController {
 
   public store = async (req: Request, res: Response) => {
     let { userId } = req.userSession
-    const { titulo, descricao, imagem, conteudo, ativo, id_ferramenta, tags } = req.body
+    const { titulo, descricao, imagem, conteudo, ativo, id_ferramenta } = req.body
 
     if(!titulo || !descricao || !imagem || !conteudo || !id_ferramenta) 
       return res.status(401).json({ error: 'Please, inform all data' })
@@ -67,21 +67,21 @@ class ConteudosController {
 
     const data = user.id_tipo === 1 ?
       this.factoryContent(titulo, imagem, descricao, conteudo, false, userId, Number(id_ferramenta)) :
-      this.factoryContent(titulo, imagem, descricao, conteudo, ativo, userId, Number(id_ferramenta)) 
+      this.factoryContent(titulo, imagem, descricao, conteudo, Boolean(ativo), userId, Number(id_ferramenta)) 
 
     try {
-      for(let id_tag of tags) {
-        const existsTag = await this._tagsModel.getTag(Number(id_tag))
+      // for(let id_tag of tags) {
+      //   const existsTag = await this._tagsModel.getTag(Number(id_tag))
         
-        if(!existsTag) return res.status(404).json({ error: `Tag ${id_tag} not Found` })
-      }
+      //   if(!existsTag) return res.status(404).json({ error: `Tag ${id_tag} not Found` })
+      // }
 
       const id = await this._conteudoModel.createConteudo(data)
 
-      const tag = await this.addTags(id, tags)
+      // const tag = await this.addTags(id, tags)
 
       return user.id_tipo === 1 ? 
-        res.send({ sucess: "Enviado para analise" }) : res.json({ id, ...data, tag })
+        res.send({ sucess: "Enviado para analise" }) : res.json({ id, ...data })
     } catch (e) {
       return res.status(400).json({ error: e.message })
     }
@@ -89,7 +89,7 @@ class ConteudosController {
 
   public update = async (req: Request, res: Response) => {
     const { id_conteudo } = req.params
-    let { titulo, imagem, descricao, conteudo, ativo, id_ferramenta, tags } = req.body
+    let { titulo, imagem, descricao, conteudo, ativo, id_ferramenta } = req.body
 
     const existsConteudo = await this._conteudoModel.existsConteudo(Number(id_conteudo))
 
@@ -105,14 +105,14 @@ class ConteudosController {
     } 
 
     try {
-      for(let id_tag of tags) {
-        const existsTag = await this._tagsModel.getTag(Number(id_tag))
+    //   for(let id_tag of tags) {
+    //     const existsTag = await this._tagsModel.getTag(Number(id_tag))
         
-        if(!existsTag) return res.status(404).json({ error: `Tag ${id_tag} not Found` })
-      }
+    //     if(!existsTag) return res.status(404).json({ error: `Tag ${id_tag} not Found` })
+    //   }
 
-      await this._tagsConteudosModel.deleteTagsConteudos(Number(id_conteudo))
-      await this.addTags(Number(id_conteudo), tags)
+      // await this._tagsConteudosModel.deleteTagsConteudos(Number(id_conteudo))
+      // await this.addTags(Number(id_conteudo), tags)
       
       await this._conteudoModel.updateConteudos(data, Number(id_conteudo))
 

@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react';
-import { MdAdd, MdRemoveRedEye, MdEdit } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { MdAdd, MdRemoveRedEye, MdEdit, MdClose } from 'react-icons/md';
 
 import api from '../../../services/api';
 
@@ -17,6 +18,7 @@ interface Content {
   id_conteudo: number;
   imagem: string;
   titulo: string;
+  ferramenta_descritivo: string;
   descricao: string;
   data_publicacao: string;
   usuario_nome: string;
@@ -43,6 +45,16 @@ const resources: React.FC = () => {
     });
   }, []);
 
+  console.log('Recursos', contents);
+
+  function handleResourceDelete(id: number): void {
+    if (window.confirm('Confirmar exclusão?')) {
+      api.delete(`/conteudos/${id}`);
+      toast.success('✅ Recurso excluido com sucesso!');
+      window.location.href = 'http://localhost:3000/admin/resources';
+    }
+  }
+
   return (
     <>
       <Navbar logged admin />
@@ -63,7 +75,7 @@ const resources: React.FC = () => {
                 <thead>
                   <tr className={styles.tableHead}>
                     <th>Titulo</th>
-                    <th>Tags</th>
+                    <th>Ferramenta</th>
                     <th>Data de publicação</th>
                     <th>Autor</th>
                     <th>Ativo</th>
@@ -76,11 +88,7 @@ const resources: React.FC = () => {
                       <td>
                         {`${content.publicacao.titulo.substring(0, 20)}...`}
                       </td>
-                      <td>
-                        {content.tag.map(tag => (
-                          <span className={styles.tag}>{tag.descritivo}</span>
-                        ))}
-                      </td>
+                      <td>{content.publicacao.ferramenta_descritivo}</td>
                       <td>{content.publicacao.data_publicacao}</td>
                       <td>{content.publicacao.usuario_nome}</td>
                       <td>
@@ -100,6 +108,17 @@ const resources: React.FC = () => {
                           >
                             <Button icon={MdEdit}>Editar</Button>
                           </Link>
+                          <Button
+                            icon={MdClose}
+                            variant="error"
+                            className={styles.action}
+                            onClick={() =>
+                              handleResourceDelete(
+                                content.publicacao.id_conteudo,
+                              )}
+                          >
+                            Excluir
+                          </Button>
                         </div>
                       </td>
                     </tr>
